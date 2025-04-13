@@ -12,7 +12,7 @@ using ScheduleProject.Infrastracture.EF;
 namespace ScheduleProject.Infrastracture.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250412220611_InitEntities")]
+    [Migration("20250413210346_InitEntities")]
     partial class InitEntities
     {
         /// <inheritdoc />
@@ -24,6 +24,78 @@ namespace ScheduleProject.Infrastracture.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ScheduleProject.Core.Entities.AppUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("AuthTokenId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Login")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ScheduleProject.Core.Entities.AuthToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("AccessTokenExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
+
+                    b.ToTable("AuthToken");
+                });
 
             modelBuilder.Entity("ScheduleProject.Core.Entities.Institution", b =>
                 {
@@ -169,30 +241,73 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.ToTable("ScheduleMembers");
                 });
 
-            modelBuilder.Entity("ScheduleProject.Core.Entities.TelegramUser", b =>
+            modelBuilder.Entity("ScheduleProject.Core.Entities.UserRole", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("LastName")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TelegramUsers");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("UserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "DomainUser"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "InstitusionAdder"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "InstitusionRemover"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Administrator"
+                        });
+                });
+
+            modelBuilder.Entity("Users_Roles", b =>
+                {
+                    b.Property<long>("RolesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UsersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("Users_Roles");
+                });
+
+            modelBuilder.Entity("ScheduleProject.Core.Entities.AuthToken", b =>
+                {
+                    b.HasOne("ScheduleProject.Core.Entities.AppUser", "Owner")
+                        .WithOne("AuthToken")
+                        .HasForeignKey("ScheduleProject.Core.Entities.AuthToken", "OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ScheduleProject.Core.Entities.Lesson", b =>
@@ -246,7 +361,7 @@ namespace ScheduleProject.Infrastracture.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScheduleProject.Core.Entities.TelegramUser", "TelegramUser")
+                    b.HasOne("ScheduleProject.Core.Entities.AppUser", "TelegramUser")
                         .WithMany("ScheduleMemberships")
                         .HasForeignKey("TelegramUserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,6 +370,28 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.Navigation("Schedule");
 
                     b.Navigation("TelegramUser");
+                });
+
+            modelBuilder.Entity("Users_Roles", b =>
+                {
+                    b.HasOne("ScheduleProject.Core.Entities.UserRole", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScheduleProject.Core.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ScheduleProject.Core.Entities.AppUser", b =>
+                {
+                    b.Navigation("AuthToken");
+
+                    b.Navigation("ScheduleMemberships");
                 });
 
             modelBuilder.Entity("ScheduleProject.Core.Entities.Institution", b =>
@@ -267,11 +404,6 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.Navigation("Lessons");
 
                     b.Navigation("Members");
-                });
-
-            modelBuilder.Entity("ScheduleProject.Core.Entities.TelegramUser", b =>
-                {
-                    b.Navigation("ScheduleMemberships");
                 });
 #pragma warning restore 612, 618
         }

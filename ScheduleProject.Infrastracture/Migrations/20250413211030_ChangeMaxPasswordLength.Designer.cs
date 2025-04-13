@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScheduleProject.Infrastracture.EF;
 
@@ -11,9 +12,11 @@ using ScheduleProject.Infrastracture.EF;
 namespace ScheduleProject.Infrastracture.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413211030_ChangeMaxPasswordLength")]
+    partial class ChangeMaxPasswordLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,7 +259,7 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRole");
 
                     b.HasData(
                         new

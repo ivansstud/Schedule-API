@@ -1,8 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Enums;
 
-#pragma warning disable CS8618
-
 namespace ScheduleProject.Core.Entities;
 
 public class ScheduleMember : Entity
@@ -17,10 +15,10 @@ public class ScheduleMember : Entity
 	}
 
 	public long ScheduleId { get; private set; }
-	public Schedule Schedule { get; private set; }
+	public Schedule Schedule { get; private set; } = null!;
 
 	public long TelegramUserId { get; private set; }
-	public TelegramUser TelegramUser { get; private set; }
+	public AppUser TelegramUser { get; private set; } = null!;
 
 	public ScheduleRole Role { get; private set; }
 
