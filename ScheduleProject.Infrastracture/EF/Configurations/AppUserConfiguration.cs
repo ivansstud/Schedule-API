@@ -23,8 +23,8 @@ class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 		builder.HasIndex(x => x.Login).IsUnique();
 
 		builder.HasMany(x => x.ScheduleMemberships)
-			.WithOne(x => x.TelegramUser)
-			.HasForeignKey(x => x.TelegramUserId)
+			.WithOne(x => x.User)
+			.HasForeignKey(x => x.UserId)
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Navigation(x => x.ScheduleMemberships).UsePropertyAccessMode(PropertyAccessMode.Field);

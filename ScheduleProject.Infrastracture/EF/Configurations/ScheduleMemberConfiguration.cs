@@ -23,8 +23,8 @@ class ScheduleMemberConfiguration : IEntityTypeConfiguration<ScheduleMember>
 			.WithMany(x => x.Members)
 			.HasForeignKey(x => x.ScheduleId);
 
-		builder.HasOne(x => x.TelegramUser)
+		builder.HasOne(x => x.User)
 			.WithMany(x => x.ScheduleMemberships)
-			.HasForeignKey(x => x.TelegramUserId);
+			.HasForeignKey(x => x.UserId);
 	}
 }
