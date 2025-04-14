@@ -11,6 +11,8 @@ public class Schedule : EntityBase
 	public const int MaxNameLength = 32;
 	public const int MaxDescriptionLength = 128;
 
+	public const int MinNameLength = 1;
+
 	private readonly List<ScheduleMember> _members = [];
 	private readonly List<Lesson> _lessons = [];
 
@@ -37,9 +39,11 @@ public class Schedule : EntityBase
 
 	public static Result<Schedule> Create(string name, string? description, ScheduleType type, ScheduleWeeksType weeksType, long? institutionId)
 	{
-		if (name.Length > MaxNameLength)
+		name = name.Trim();
+
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
-			return Result.Failure<Schedule>($"Название не может быть длиннее {MaxNameLength} символов");
+			return Result.Failure<Schedule>($"Название должно содержать от {MinNameLength} до {MaxNameLength} символов");
 		}
 		if (description?.Length > MaxDescriptionLength)
 		{

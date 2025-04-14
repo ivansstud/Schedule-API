@@ -8,9 +8,12 @@ namespace ScheduleProject.Core.Entities;
 
 public class Institution : EntityBase
 {
-	public const int MaxNameLength = 64;
-	public const int MaxShortNameLength = 16;
+	public const int MaxNameLength = 128;
+	public const int MaxShortNameLength = 32;
 	public const int MaxDescriptionLength = 256;
+	
+	public const int MinNameLength = 32;
+	public const int MinShortNameLength = 3;
 
 	private readonly List<Schedule> _schedules = [];
 
@@ -30,13 +33,14 @@ public class Institution : EntityBase
 
 	public static Result<Institution> Create(string name, string shortName, string? description)
 	{
-		if (name.Length > MaxNameLength)
+
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
-			return Result.Failure<Institution>($"Название учреждения не может быть длиннее {MaxNameLength} символов");
+			return Result.Failure<Institution>($"Название учреждения должно содержать от {MinNameLength} до {MaxNameLength} символов");
 		}
-		if (shortName.Length > MaxShortNameLength)
+		if (shortName.Length > MaxShortNameLength || shortName.Length < MinShortNameLength)
 		{
-			return Result.Failure<Institution>($"Короткое название учреждения не может быть длиннее {MaxShortNameLength} символов");
+			return Result.Failure<Institution>($"Короткое название учреждения должно содержать от {MinShortNameLength} до {MaxShortNameLength} символов");
 		}
 		if (description?.Length > MaxDescriptionLength)
 		{

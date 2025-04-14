@@ -14,6 +14,8 @@ public class Lesson : EntityBase
 	public const int MaxTeacherNameLength = 32;
 	public const int MaxAudienceLength = 16;
 
+	public const int MinNameLength = 1;
+
 	private Lesson() { } // Для EF Core
 
 	private Lesson(
@@ -66,9 +68,11 @@ public class Lesson : EntityBase
 		DayOfWeek dayOfWeek,
 		long scheduleId)
 	{
-		if (name.Length > MaxNameLength)
+		name = name.Trim();
+
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
-			return Result.Failure<Lesson>($"Название занятия не может быть длиннее {MaxNameLength} символов");
+			return Result.Failure<Lesson>($"Название занятия должно содержать от {MinNameLength} до {MaxNameLength} символов");
 		}
 		if (description?.Length > MaxDescriptionLength)
 		{
