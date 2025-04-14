@@ -8,7 +8,7 @@ using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Infrastracture.Auth.Extensions;
 using ScheduleProject.Infrastracture.Auth.Options;
-using ScheduleProject.Infrastracture.EF;
+using ScheduleProject.Infrastracture.DAL.EF;
 using System.Data;
 
 namespace ScheduleProject.Infrastracture.Auth.Services;

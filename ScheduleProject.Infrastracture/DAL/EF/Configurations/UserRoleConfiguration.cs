@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
 
-namespace ScheduleProject.Infrastracture.EF.Configurations;
+namespace ScheduleProject.Infrastracture.DAL.EF.Configurations;
 
 class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 {
@@ -31,7 +31,7 @@ class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 			.ToList()
 			.ForEach(index =>
 			{
-				builder.HasData(UserRole.Create(id: (index + 1), name: appRoles[index]));
+				builder.HasData(UserRole.Create(id: index + 1, name: appRoles[index]));
 			});
 	}
 }

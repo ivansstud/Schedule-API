@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Abstractions;
 
-namespace ScheduleProject.Infrastracture.EF;
+namespace ScheduleProject.Infrastracture.DAL.EF;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

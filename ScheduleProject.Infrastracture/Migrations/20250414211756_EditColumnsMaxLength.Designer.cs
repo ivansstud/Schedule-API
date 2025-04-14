@@ -13,8 +13,8 @@ using ScheduleProject.Infrastracture.DAL.EF;
 namespace ScheduleProject.Infrastracture.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250413210346_InitEntities")]
-    partial class InitEntities
+    [Migration("20250414211756_EditColumnsMaxLength")]
+    partial class EditColumnsMaxLength
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.Property<long?>("AuthTokenId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(24)
@@ -44,8 +47,11 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
-                        .HasMaxLength(24)
-                        .HasColumnType("nvarchar(24)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -56,6 +62,9 @@ namespace ScheduleProject.Infrastracture.Migrations
                         .IsRequired()
                         .HasMaxLength(24)
                         .HasColumnType("nvarchar(24)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -78,6 +87,15 @@ namespace ScheduleProject.Infrastracture.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("AccessTokenExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("OwnerId")
@@ -106,19 +124,28 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -143,6 +170,9 @@ namespace ScheduleProject.Infrastracture.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -153,6 +183,12 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,12 +224,21 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<long?>("InstitutionId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -223,6 +268,15 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -230,14 +284,14 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.Property<long>("ScheduleId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TelegramUserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ScheduleId");
 
-                    b.HasIndex("TelegramUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ScheduleMembers");
                 });
@@ -250,6 +304,15 @@ namespace ScheduleProject.Infrastracture.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -260,29 +323,7 @@ namespace ScheduleProject.Infrastracture.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("UserRole");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Name = "DomainUser"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Name = "InstitusionAdder"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Name = "InstitusionRemover"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Name = "Administrator"
-                        });
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Users_Roles", b =>
@@ -362,15 +403,15 @@ namespace ScheduleProject.Infrastracture.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScheduleProject.Core.Entities.AppUser", "TelegramUser")
+                    b.HasOne("ScheduleProject.Core.Entities.AppUser", "User")
                         .WithMany("ScheduleMemberships")
-                        .HasForeignKey("TelegramUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Schedule");
 
-                    b.Navigation("TelegramUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Users_Roles", b =>

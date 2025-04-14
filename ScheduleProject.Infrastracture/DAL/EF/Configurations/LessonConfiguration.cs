@@ -4,7 +4,7 @@ using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities.ValueObjects;
 
-namespace ScheduleProject.Infrastracture.EF.Configurations;
+namespace ScheduleProject.Infrastracture.DAL.EF.Configurations;
 
 class LessonConfiguration : IEntityTypeConfiguration<Lesson>
 {

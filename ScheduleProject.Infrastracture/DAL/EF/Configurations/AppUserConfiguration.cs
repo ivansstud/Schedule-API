@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScheduleProject.Core.Entities;
 
-namespace ScheduleProject.Infrastracture.EF.Configurations;
+namespace ScheduleProject.Infrastracture.DAL.EF.Configurations;
 
 class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {

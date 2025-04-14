@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
 
-namespace ScheduleProject.Infrastracture.EF.Configurations;
+namespace ScheduleProject.Infrastracture.DAL.EF.Configurations;
 
 class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 {
