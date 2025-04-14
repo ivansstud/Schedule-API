@@ -1,7 +1,13 @@
-﻿namespace ScheduleProject.Core.Abstractions.Services;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.IdentityModel.Tokens;
+using ScheduleProject.Core.Dtos.Auth;
+using System.Security.Claims;
+
+namespace ScheduleProject.Core.Abstractions.Services;
 
 public interface IJwtService
 {
-	string CreateAccessToken(long userId, string userName, List<string> userRoles);
+	string CreateAccessToken(CreateAccessTokenDto createTokenDto);
 	string CreateRefreshToken();
+	Result<ClaimsPrincipal> GetPrincipalFromToken(string token, TokenValidationParameters parameters);
 }

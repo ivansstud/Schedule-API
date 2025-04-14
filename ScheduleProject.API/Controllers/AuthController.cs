@@ -9,6 +9,8 @@ using ScheduleProject.Infrastracture.EF;
 using ScheduleProject.Core.Dtos.Auth;
 using Microsoft.EntityFrameworkCore;
 using ScheduleProject.API.Dtos.Responce.Auth;
+using System.Data;
+using System.Security.Claims;
 
 namespace ScheduleProject.API.Controllers;
 
@@ -79,17 +81,24 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpPost("[action]")]
-	public async Task<IActionResult> Refresh(RefreshDto refreshDto)
+	public async Task<IActionResult> Refresh()
 	{
 		var refreshToken = HttpContext.Request.Cookies[_jwtOptions.RefreshTokenCookieKey];
+		var accessToken = HttpContext.Request.Cookies[_jwtOptions.AccessTokenCookieKey];
 
-		if (refreshToken is null)
+		if (refreshToken is null || accessToken is null)
 		{
 			return BadRequest("Ошибка авторизации. Повторите вход");
 		}
 
-		var refreshTokensDto = new RefreshTokensDto { Login = refreshDto.Login, RefreshToken = refreshToken };
-		var tokenResult = await _authService.RefreshTokens(refreshTokensDto);
+		var login = _authService.GetLoginFromExpiredToken(accessToken);
+
+		if (login is null)
+		{
+			return BadRequest("Ошибка авторизации. Повторите вход");
+		}
+
+		var tokenResult = await _authService.RefreshTokensAsync(new(Login: login, RefreshToken: refreshToken));
 
 		if (tokenResult.IsFailure)
 		{
@@ -99,6 +108,18 @@ public class AuthController : ControllerBase
 		AddAuthTokenToCookie(tokenResult.Value);
 
 		return Ok();
+	}
+
+	[Authorize]
+	[HttpPost("[action]")]
+	public IActionResult GetCurrentUser()
+	{
+		return Ok(new
+		{
+			Name = User.Identity?.Name,
+			Login = User.FindFirstValue(CustomClaimTypes.Login),
+			Roles = User.FindAll(ClaimTypes.Role).Select(x => x.Value),
+		});
 	}
 
 	[Authorize(Roles = $"{AppRoles.DomainUser}")]
@@ -114,8 +135,6 @@ public class AuthController : ControllerBase
 	{
 		return "success";
 	}
-
-	public sealed record RefreshDto(string Login);
 
 	private void AddAuthTokenToCookie(AuthToken token)
 	{

@@ -1,12 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Dtos.Auth;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Infrastracture.Auth.Options;
+using ScheduleProject.Infrastracture.Auth.Options.Extensions;
 using ScheduleProject.Infrastracture.EF;
+using System.Data;
 
 namespace ScheduleProject.Infrastracture.Auth.Services;
 
@@ -51,7 +54,7 @@ public class AuthService : IAuthService
 		else
 		{
 			var roles = foundUser.Roles.Select(x => x.Name).ToList();
-			var authToken = CreateAuthToken(foundUser.Id, foundUser.Login, roles);
+			var authToken = CreateAuthToken(foundUser.Id, foundUser.Login, foundUser.FirstName, roles);
 
 			foundUser.SetAuthToken(authToken);
 		}
@@ -61,13 +64,14 @@ public class AuthService : IAuthService
 		return foundUser;
 	}
 
-	public async Task<Result<AuthToken>> RefreshTokens(RefreshTokensDto refreshDto, CancellationToken cancellationToken = default)
+	public async Task<Result<AuthToken>> RefreshTokensAsync(RefreshTokensDto refreshDto, CancellationToken cancellationToken = default)
 	{
 		var foundUser = await _dbContext.Users
 			.Include(x => x.AuthToken)
+			.Include(x => x.Roles)
 			.FirstOrDefaultAsync(x => x.Login == refreshDto.Login, cancellationToken);
 
-		var failureMessage = "Ошибка авторизации. Необходим повторный вход";
+		var failureMessage = "Ошибка авторизации";
 
 		if (foundUser is null || foundUser.AuthToken is null)
 		{
@@ -118,21 +122,39 @@ public class AuthService : IAuthService
 		return Result.Success();
 	}
 
+	public string? GetLoginFromExpiredToken(string jwtToken)
+	{
+		var validationParameters = new TokenValidationParameters().CreateParameters(_jwtOptions);
+		validationParameters.ValidateLifetime = false;
+
+		var principalResult = _jwtService.GetPrincipalFromToken(jwtToken, validationParameters);
+
+		if (principalResult.IsFailure)
+		{
+			return null;
+		}
+
+		var login = principalResult.Value.FindFirst(CustomClaimTypes.Login)?.Value;
+		return login;
+	}
+
 	private void UpdateAuthToken(AppUser user)
 	{
 		var roles = user.Roles.Select(x => x.Name).ToList();
-		var newAccessToken = _jwtService.CreateAccessToken(user.Id, user.FirstName, roles);
+		var newAccessToken = _jwtService.CreateAccessToken(new(Login: user.Login, Name: user.FirstName, Roles: roles));
 		var newRefreshToken = _jwtService.CreateRefreshToken();
 
-		user.AuthToken!.Update(newAccessToken,
+		user.AuthToken!.Update(
+			newAccessToken,
 			newRefreshToken,
 			_jwtOptions.AccessTokenExpiryMinutes,
-			_jwtOptions.RefreshTokenExpiryDays);
+			_jwtOptions.RefreshTokenExpiryDays
+		);
 	}
 
-	private AuthToken CreateAuthToken(long userId, string userName, List<string> userRoles)
+	private AuthToken CreateAuthToken(long userId, string login, string name, List<string> roles)
 	{
-		var accessToken = _jwtService.CreateAccessToken(userId, userName, userRoles);
+		var accessToken = _jwtService.CreateAccessToken(new (Login: login, Name: name, Roles: roles));
 		var refreshToken = _jwtService.CreateRefreshToken();
 		var authToken = AuthToken.Create(
 			ownerId: userId,

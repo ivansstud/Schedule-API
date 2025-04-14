@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ScheduleProject.Core.Abstractions.Services;
+using ScheduleProject.Core.Dtos.Auth;
+using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Infrastracture.Auth.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,15 +21,15 @@ public class JwtService : IJwtService
 		_jwtOptions = options.Value;
 	}
 
-	public string CreateAccessToken(long userId, string userName, List<string> userRoles)
+	public string CreateAccessToken(CreateAccessTokenDto createTokenDto)
 	{
 		var claims = new List<Claim>
 		{
-			new (ClaimTypes.Name, userName),
-			new (ClaimTypes.NameIdentifier, userId.ToString()),
+			new (ClaimTypes.Name, createTokenDto.Name),
+			new (CustomClaimTypes.Login, createTokenDto.Login),
 		};
 
-		claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+		claims.AddRange(createTokenDto.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
 		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
@@ -35,10 +38,31 @@ public class JwtService : IJwtService
 			issuer: _jwtOptions.Issuer,
 			audience: _jwtOptions.Audience,
 			signingCredentials: credentials,
-			expires: DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpiryMinutes));
+			expires: DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpiryMinutes)
+		);
 
 		return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
 	}
+
+	public Result<ClaimsPrincipal> GetPrincipalFromToken(string token, TokenValidationParameters parameters)
+	{
+		var handler = new JwtSecurityTokenHandler();
+		try
+		{
+			var principal = handler.ValidateToken(token, parameters, out var validatedToken);
+			if (principal is null)
+			{
+				return Result.Failure<ClaimsPrincipal>("Не удалось индентифицировать пользователя");
+			}
+
+			return principal;
+		}
+		catch (Exception)
+		{
+			return Result.Failure<ClaimsPrincipal>("Не удалось индентифицировать пользователя");
+			//TODO: добавить логирование ошибок
+		}
+	} 
 
 	public string CreateRefreshToken()
 	{

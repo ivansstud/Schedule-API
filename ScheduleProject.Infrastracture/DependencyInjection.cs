@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Infrastracture.Auth.Options;
+using ScheduleProject.Infrastracture.Auth.Options.Extensions;
 using ScheduleProject.Infrastracture.Auth.Services;
 using ScheduleProject.Infrastracture.EF;
-using System.Text;
 
 namespace ScheduleProject.Infrastracture;
 
@@ -27,16 +25,7 @@ public static class DependencyInjection
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer(options =>
 			{
-				options.TokenValidationParameters = new TokenValidationParameters()
-				{
-					ValidateIssuer = true,
-					ValidIssuer = jwtOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = jwtOptions.Audience,
-					ValidateLifetime = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
-					ValidateIssuerSigningKey = true
-				};
+				options.TokenValidationParameters = new TokenValidationParameters().CreateParameters(jwtOptions);
 
 				options.Events = new JwtBearerEvents()
 				{
