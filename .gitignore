@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /ScheduleProject.API/appsettings.json
 /ScheduleProject.API/appsettings.Development.json
+/.editorconfig

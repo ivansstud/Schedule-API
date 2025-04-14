@@ -6,8 +6,8 @@ using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Dtos.Auth;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
+using ScheduleProject.Infrastracture.Auth.Extensions;
 using ScheduleProject.Infrastracture.Auth.Options;
-using ScheduleProject.Infrastracture.Auth.Options.Extensions;
 using ScheduleProject.Infrastracture.EF;
 using System.Data;
 

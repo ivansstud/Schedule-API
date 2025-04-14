@@ -1,7 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using ScheduleProject.Infrastracture.Auth.Options;
 using System.Text;
 
-namespace ScheduleProject.Infrastracture.Auth.Options.Extensions;
+namespace ScheduleProject.Infrastracture.Auth.Extensions;
 
 public static class TokenValidationParametersExtension
 {

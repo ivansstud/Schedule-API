@@ -131,20 +131,6 @@ public class AuthController : ControllerBase
 		});
 	}
 
-	[Authorize(Roles = $"{AppRoles.DomainUser}")]
-	[HttpPost("[action]")]
-	public ActionResult<string> OnlyDomainAndAdmin()
-	{
-		return "success";
-	}
-
-	[Authorize(Roles = AppRoles.Administrator)]
-	[HttpPost("[action]")]
-	public ActionResult<string> OnlyAdmin()
-	{
-		return "success";
-	}
-
 	private void AddAuthTokenToCookie(AuthToken token)
 	{
 		Response.Cookies.Append(_jwtOptions.AccessTokenCookieKey, token.AccessToken);

@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ScheduleProject.Core.Abstractions.Services;
+using ScheduleProject.Infrastracture.Auth.Extensions;
 using ScheduleProject.Infrastracture.Auth.Options;
-using ScheduleProject.Infrastracture.Auth.Options.Extensions;
 using ScheduleProject.Infrastracture.Auth.Services;
 using ScheduleProject.Infrastracture.EF;
 

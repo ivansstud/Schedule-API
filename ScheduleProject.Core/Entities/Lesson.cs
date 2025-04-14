@@ -63,8 +63,7 @@ public class Lesson : Entity
 		TimeOnly endTime,
 		ScheduleWeeksType sheduleWeeksType,
 		DayOfWeek dayOfWeek,
-		long scheduleId
-		)
+		long scheduleId)
 	{
 		if (name.Length > MaxNameLength)
 		{
@@ -87,7 +86,8 @@ public class Lesson : Entity
 			return Result.Failure<Lesson>($"Время начала занятия не может быть позже времени окончания");
 		}
 
-		return new Lesson(name,
+		return new Lesson(
+			name,
 			description,
 			teacherName,
 			audience,
