@@ -1,8 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
 
 namespace ScheduleProject.Core.Entities;
 
-public class AuthToken : Entity
+public class AuthToken : EntityBase
 {
 	private AuthToken(long ownerId, string accessToken, string refreshToken, DateTime accessTokenExpiryDate, DateTime refreshTokenExpiryDate)
 	{
@@ -45,7 +46,8 @@ public class AuthToken : Entity
 			throw new InvalidOperationException("RefreshTokenExpiryDate не может быть меньше текущего времени");
 		}
 
-		return new (ownerId, accessToken, refreshToken, accessTokenExpiryDate, refreshTokenExpiryDate);
+		var result = new AuthToken(ownerId, accessToken, refreshToken, accessTokenExpiryDate, refreshTokenExpiryDate);
+		return result;
 	}
 
 	public void Update(string accessToken, string refreshToken, int accessTokenExpiryMinutes, int refreshTokenExpiryDays)

@@ -1,9 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
 
 namespace ScheduleProject.Core.Entities;
 
-public class ScheduleMember : Entity
+public class ScheduleMember : EntityBase
 {
 	private ScheduleMember() { } // Для EF Core
 
@@ -24,6 +25,7 @@ public class ScheduleMember : Entity
 
 	public static Result<ScheduleMember> Create(long scheduleId, long userId, ScheduleRole role)
 	{
-		return new ScheduleMember(scheduleId, userId, role);
+		var result = new ScheduleMember(scheduleId, userId, role);
+		return result;
 	}
 }

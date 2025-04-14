@@ -1,11 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
 
 #pragma warning disable CS8618
 
 namespace ScheduleProject.Core.Entities;
 
-public class Schedule : Entity
+public class Schedule : EntityBase
 {
 	public const int MaxNameLength = 32;
 	public const int MaxDescriptionLength = 128;
@@ -49,7 +50,8 @@ public class Schedule : Entity
 			return Result.Failure<Schedule>($"Оригинальное расписание не может быть создано с учреждением");
 		}
 
-		return new Schedule(name, description, type, weeksType, institutionId);
+		var result = new Schedule(name, description, type, weeksType, institutionId);
+		return result;
 	}
 
 	public void AddLesson(Lesson lesson)

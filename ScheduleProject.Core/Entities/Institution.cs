@@ -1,10 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
+
 
 #pragma warning disable CS8618 
 
 namespace ScheduleProject.Core.Entities;
 
-public class Institution : Entity
+public class Institution : EntityBase
 {
 	public const int MaxNameLength = 64;
 	public const int MaxShortNameLength = 16;
@@ -41,7 +43,8 @@ public class Institution : Entity
 			return Result.Failure<Institution>($"Описание учреждения не может быть длиннее {MaxDescriptionLength} символов");
 		}
 
-		return new Institution(name, shortName, description);
+		var result = new Institution(name, shortName, description);
+		return result;
 	}
 
 	public void AddSchedule(Schedule schedule)

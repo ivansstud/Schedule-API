@@ -20,7 +20,7 @@ class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 
 		builder.Navigation(x => x.Users).UsePropertyAccessMode(PropertyAccessMode.Field);
 
-		AddRolesData(builder);
+		//AddRolesData(builder);
 	}
 
 	private static void AddRolesData(EntityTypeBuilder<UserRole> builder)

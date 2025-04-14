@@ -1,10 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
+
 
 #pragma warning disable CS8618
 
 namespace ScheduleProject.Core.Entities;
 
-public class AppUser : Entity
+public class AppUser : EntityBase
 {
 	public const int MaxFirstNameLength = 24;
 	public const int MaxLastNameLength = 24;
@@ -48,8 +50,9 @@ public class AppUser : Entity
 		{
 			return Result.Failure<AppUser>($"Логин не может быть длиннее {MaxLoginLength} символов");
 		}
-
-		return new AppUser(login, passwordHash, firstName, lastName);
+		
+		var result = new AppUser(login, passwordHash, firstName, lastName);
+		return result;
 	}
 
 	public void SetAuthToken(AuthToken token)

@@ -1,8 +1,8 @@
-﻿using CSharpFunctionalExtensions;
+﻿using ScheduleProject.Core.Entities.Abstractions;
 
 namespace ScheduleProject.Core.Entities;
 
-public class UserRole : Entity
+public class UserRole : EntityBase
 {
 	public const int MaxNameLength = 50;
 
@@ -18,6 +18,7 @@ public class UserRole : Entity
 
 	public static UserRole Create(long id, string name)
 	{
-		return new(id, name);
+		var result = new UserRole(id, name);
+		return result;
 	}
 }

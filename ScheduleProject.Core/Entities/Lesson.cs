@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities.ValueObjects;
 
@@ -6,7 +7,7 @@ using ScheduleProject.Core.Entities.ValueObjects;
 
 namespace ScheduleProject.Core.Entities;
 
-public class Lesson : Entity
+public class Lesson : EntityBase
 {
 	public const int MaxNameLength = 64;
 	public const int MaxDescriptionLength = 128;
@@ -86,7 +87,7 @@ public class Lesson : Entity
 			return Result.Failure<Lesson>($"Время начала занятия не может быть позже времени окончания");
 		}
 
-		return new Lesson(
+		var result = new Lesson(
 			name,
 			description,
 			teacherName,
@@ -98,5 +99,6 @@ public class Lesson : Entity
 			dayOfWeek,
 			scheduleId
 		);
+		return result;
 	}
 }
