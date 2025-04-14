@@ -65,6 +65,15 @@ public class AuthController : ControllerBase
 		return Ok();
 	}
 
+	[HttpPost("[action]")]
+	public  IActionResult Logout()
+	{
+		Response.Cookies.Delete(_jwtOptions.AccessTokenCookieKey);
+		Response.Cookies.Delete(_jwtOptions.RefreshTokenCookieKey);
+
+		return Ok();
+	}
+
 	[HttpGet("[action]")]
 	public ActionResult<UserResponceDto[]> Users()
 	{
@@ -83,8 +92,8 @@ public class AuthController : ControllerBase
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Refresh()
 	{
-		var refreshToken = HttpContext.Request.Cookies[_jwtOptions.RefreshTokenCookieKey];
-		var accessToken = HttpContext.Request.Cookies[_jwtOptions.AccessTokenCookieKey];
+		var refreshToken = Request.Cookies[_jwtOptions.RefreshTokenCookieKey];
+		var accessToken = Request.Cookies[_jwtOptions.AccessTokenCookieKey];
 
 		if (refreshToken is null || accessToken is null)
 		{
@@ -138,7 +147,7 @@ public class AuthController : ControllerBase
 
 	private void AddAuthTokenToCookie(AuthToken token)
 	{
-		HttpContext.Response.Cookies.Append(_jwtOptions.AccessTokenCookieKey, token.AccessToken);
-		HttpContext.Response.Cookies.Append(_jwtOptions.RefreshTokenCookieKey, token.RefreshToken);
+		Response.Cookies.Append(_jwtOptions.AccessTokenCookieKey, token.AccessToken);
+		Response.Cookies.Append(_jwtOptions.RefreshTokenCookieKey, token.RefreshToken);
 	}
 }
