@@ -5,17 +5,17 @@ using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Infrastracture.Auth.Options;
-using ScheduleProject.Infrastracture.EF;
 using ScheduleProject.Core.Dtos.Auth;
 using Microsoft.EntityFrameworkCore;
 using ScheduleProject.API.Dtos.Responce.Auth;
 using System.Data;
 using System.Security.Claims;
+using ScheduleProject.Infrastracture.DAL.EF;
 
 namespace ScheduleProject.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
 	private readonly JwtOptions _jwtOptions;
@@ -107,7 +107,7 @@ public class AuthController : ControllerBase
 			return BadRequest("Ошибка авторизации. Повторите вход");
 		}
 
-		var tokenResult = await _authService.RefreshTokensAsync(new(Login: login, RefreshToken: refreshToken));
+		var tokenResult = await _authService.RefreshTokensAsync(new (Login: login, RefreshToken: refreshToken));
 
 		if (tokenResult.IsFailure)
 		{

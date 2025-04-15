@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Dtos.Auth;
 using ScheduleProject.Core.Entities;
-using System.Dynamic;
 
 namespace ScheduleProject.Core.Abstractions.Services;
 

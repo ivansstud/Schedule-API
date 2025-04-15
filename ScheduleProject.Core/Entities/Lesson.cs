@@ -28,8 +28,7 @@ public class Lesson : EntityBase
 		TimeOnly endTime,
 		ScheduleWeeksType sheduleWeeksType,
 		DayOfWeek dayOfWeek,
-		long scheduleId
-		)
+		long scheduleId)
 	{
 		Name = name;
 		Description = description;

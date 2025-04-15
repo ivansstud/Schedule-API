@@ -25,7 +25,6 @@ public class ScheduleMember : EntityBase
 
 	public static Result<ScheduleMember> Create(long scheduleId, long userId, ScheduleRole role)
 	{
-		var result = new ScheduleMember(scheduleId, userId, role);
-		return result;
+		return new ScheduleMember(scheduleId, userId, role);
 	}
 }

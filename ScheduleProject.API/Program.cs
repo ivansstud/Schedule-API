@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.CookiePolicy;
 using Scalar.AspNetCore;
+using ScheduleProject.Application.Services;
+using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Infrastracture;
 using ScheduleProject.Infrastracture.Auth.Options;
 
@@ -12,12 +14,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddMSSQLDbContext(configuration.GetConnectionString("MSSQL")!);
 
+builder.Services.AddRepositories();
+
 builder.Services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
 
 builder.Services.AddJwtAuthenication(jwtOptions);
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 var app = builder.Build();
 

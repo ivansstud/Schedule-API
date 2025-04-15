@@ -2,11 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ScheduleProject.Core.Abstractions.DAL;
 using ScheduleProject.Core.Abstractions.Services;
+using ScheduleProject.Core.Entities;
 using ScheduleProject.Infrastracture.Auth.Extensions;
 using ScheduleProject.Infrastracture.Auth.Options;
 using ScheduleProject.Infrastracture.Auth.Services;
 using ScheduleProject.Infrastracture.DAL.EF;
+using ScheduleProject.Infrastracture.DAL.Repositories;
 
 namespace ScheduleProject.Infrastracture;
 
@@ -40,5 +43,10 @@ public static class DependencyInjection
 		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IPasswordService, PasswordService>();
+	}
+
+	public static void AddRepositories(this IServiceCollection services)
+	{
+		services.AddScoped<IRepository<Schedule>, RepositoryBase<Schedule>>();
 	}
 }

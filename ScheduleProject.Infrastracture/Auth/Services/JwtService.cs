@@ -27,6 +27,7 @@ public class JwtService : IJwtService
 		{
 			new (ClaimTypes.Name, createTokenDto.Name),
 			new (CustomClaimTypes.Login, createTokenDto.Login),
+			new (ClaimTypes.NameIdentifier, createTokenDto.UserId.ToString())
 		};
 
 		claims.AddRange(createTokenDto.Roles.Select(role => new Claim(ClaimTypes.Role, role)));

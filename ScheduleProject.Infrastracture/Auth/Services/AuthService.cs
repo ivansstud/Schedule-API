@@ -141,7 +141,7 @@ public class AuthService : IAuthService
 	private void UpdateAuthToken(AppUser user)
 	{
 		var roles = user.Roles.Select(x => x.Name).ToList();
-		var newAccessToken = _jwtService.CreateAccessToken(new(Login: user.Login, Name: user.FirstName, Roles: roles));
+		var newAccessToken = _jwtService.CreateAccessToken(new (UserId: user.Id, Login: user.Login, Name: user.FirstName, Roles: roles));
 		var newRefreshToken = _jwtService.CreateRefreshToken();
 
 		user.AuthToken!.Update(
@@ -154,7 +154,7 @@ public class AuthService : IAuthService
 
 	private AuthToken CreateAuthToken(long userId, string login, string name, List<string> roles)
 	{
-		var accessToken = _jwtService.CreateAccessToken(new (Login: login, Name: name, Roles: roles));
+		var accessToken = _jwtService.CreateAccessToken(new (UserId: userId, Login: login, Name: name, Roles: roles));
 		var refreshToken = _jwtService.CreateRefreshToken();
 		var authToken = AuthToken.Create(
 			ownerId: userId,

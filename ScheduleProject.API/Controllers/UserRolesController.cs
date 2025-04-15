@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleProject.Core.Entities.Enums;
-using ScheduleProject.Infrastracture.EF;
+using ScheduleProject.Infrastracture.DAL.EF;
 
 namespace ScheduleProject.API.Controllers;
 

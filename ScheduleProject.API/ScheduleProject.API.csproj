@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ScheduleProject.Application\ScheduleProject.Application.csproj" />
     <ProjectReference Include="..\ScheduleProject.Core\ScheduleProject.Core.csproj" />
     <ProjectReference Include="..\ScheduleProject.Infrastracture\ScheduleProject.Infrastracture.csproj" />
   </ItemGroup>

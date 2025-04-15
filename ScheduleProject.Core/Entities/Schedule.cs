@@ -31,7 +31,6 @@ public class Schedule : EntityBase
 	public string? Description { get; private set; }
 	public ScheduleType Type { get; private set; }
 	public ScheduleWeeksType WeeksType { get; private set; }
-
 	public long? InstitutionId { get; private set; }
 	public Institution? Institution { get; private set; }
 	public IReadOnlyList<ScheduleMember> Members => _members;
