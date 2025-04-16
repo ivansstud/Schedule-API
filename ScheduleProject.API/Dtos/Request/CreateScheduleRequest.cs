@@ -2,4 +2,4 @@
 
 namespace ScheduleProject.API.Dtos.Request;
 
-public record CreateScheduleRequest(string Name, string? Description, ScheduleType Type, ScheduleWeeksType WeeksType, long? InstitusionId);
+public record CreateScheduleRequest(string Name, string? Description, ScheduleType Type, ScheduleWeeksType WeeksType);

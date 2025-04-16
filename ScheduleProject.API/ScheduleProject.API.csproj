@@ -23,8 +23,4 @@
     <ProjectReference Include="..\ScheduleProject.Infrastracture\ScheduleProject.Infrastracture.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\Schedule\" />
-  </ItemGroup>
-
 </Project>

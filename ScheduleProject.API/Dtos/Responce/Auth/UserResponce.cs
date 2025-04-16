@@ -1,6 +1,6 @@
 ﻿namespace ScheduleProject.API.Dtos.Responce.Auth;
 
-public sealed class UserResponceDto
+public sealed class UserResponce
 {
 	public string Login { get; set; } = "";
 	public string FirstName { get; set; } = "";

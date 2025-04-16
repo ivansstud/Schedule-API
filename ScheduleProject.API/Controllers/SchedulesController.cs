@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleProject.API.Dtos.Request;
+using ScheduleProject.API.Dtos.Responce.Schedule;
+using ScheduleProject.API.Extensions.Mapping;
 using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Dtos.Schedule;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Specifications;
-using System.Diagnostics.Contracts;
 using System.Security.Claims;
-using System.Threading;
 
 namespace ScheduleProject.API.Controllers;
 
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class SchedulesController : ControllerBase
+public partial class SchedulesController : ControllerBase
 {
 	private readonly IScheduleService _scheduleService;
 
@@ -24,7 +24,7 @@ public class SchedulesController : ControllerBase
 	}
 
 	[HttpGet("{id}")]
-	public async Task<ActionResult<ScheduleResponce>> GetById(long id, CancellationToken cancellationToken)
+	public async Task<ActionResult<ScheduleInfoResponce>> GetById(long id, CancellationToken cancellationToken)
 	{
 		var specification = new ScheduleByIdWithMembersAndLessonsSpec(id, isTracking: false, includeDeleted: false);
 		var result = await _scheduleService.GetSingleBySpecificationAsync(specification, cancellationToken);
@@ -41,34 +41,11 @@ public class SchedulesController : ControllerBase
 			return NotFound();
 		}
 
-		return new ScheduleResponce
-		(
-			Name: schedule.Name,
-			Description: schedule.Description,
-			Type: schedule.Type,
-			WeeksType: schedule.WeeksType,
-
-			Members: schedule.Members.Select(m => new ScheduleMemberResponce(
-				FirstName: m.User.FirstName,
-				LastName: m.User.LastName,
-				Role: m.Role
-			)).ToList(),
-
-			Lessons: schedule.Lessons.Select(l => new LessonResponce(
-				Name: l.Name,
-				Description: l.Description,
-				Audience: l.Audience,
-				Type: l.LessonType.Value,
-				StartTime: l.StartTime,
-				EndTime: l.EndTime,
-				WeeksType: l.SheduleWeeksType,
-				Day: l.DayOfWeek
-			)).ToList()
-		);
+		return schedule.MapToInfoResponce();
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<ScheduleByUserResponce[]>> GetAllByUser(CancellationToken cancellationToken)
+	public async Task<ActionResult<SchedulePreviewResponce[]>> GetAllByUser(CancellationToken cancellationToken)
 	{
 		var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -78,7 +55,7 @@ public class SchedulesController : ControllerBase
 		}
 
 		var specification = new SchedulesByUserSpec(userId, isTracking: false);
-		var result = await _scheduleService.GetAllBySpecification(specification, cancellationToken);
+		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
 
 		if (result.IsFailure)
 		{
@@ -87,21 +64,15 @@ public class SchedulesController : ControllerBase
 
 		var schedules = result.Value;
 
-		return schedules.Select(schedule => new ScheduleByUserResponce
-		(
-			Name: schedule.Name,
-			Type: schedule.Type,
-			Role: schedule.Members.First(x => x.UserId == userId).Role
-
-		)).ToArray();
+		return schedules.Select(schedule => schedule.MapToPreviewResponse(userId)).ToArray();
 	}
 
 	[HttpGet("All")]
 	[Authorize(Roles = AppRoles.Administrator)]
-	public async Task<ActionResult<ScheduleResponce[]>> GetAll(CancellationToken cancellationToken)
+	public async Task<ActionResult<ScheduleFullInfoResponce[]>> GetAll(CancellationToken cancellationToken)
 	{
 		var specification = new AllSchedulesWithMembersAndLessonsSpec(isTracking: false, includeDeleted: true);
-		var result = await _scheduleService.GetAllBySpecification(specification, cancellationToken);
+		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
 
 		if (result.IsFailure)
 		{
@@ -110,36 +81,34 @@ public class SchedulesController : ControllerBase
 
 		var schedules = result.Value;
 
-		return schedules.Select(schedule => new ScheduleResponce
-		(
-			Name: schedule.Name,
-			Description: schedule.Description,
-			Type: schedule.Type,
-			WeeksType: schedule.WeeksType,
-
-			Members: schedule.Members.Select(m => new ScheduleMemberResponce(
-				FirstName: m.User.FirstName,
-				LastName: m.User.LastName,
-			Role: m.Role
-			)).ToList(),
-
-			Lessons: schedule.Lessons.Select(l => new LessonResponce(
-				Name: l.Name,
-				Description: l.Description,
-				Audience: l.Audience,
-				Type: l.LessonType.Value,
-				StartTime: l.StartTime,
-				EndTime: l.EndTime,
-				WeeksType: l.SheduleWeeksType,
-				Day: l.DayOfWeek
-			)).ToList()
-
-		)).ToArray();
+		return schedules.Select(schedule => schedule.MapToFullInfoResponse()).ToArray();
 	}
-
 
 	[HttpPost]
 	public async Task<ActionResult<long>> Create(CreateScheduleRequest request, CancellationToken cancellationToken)
+	{
+		var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+		if (!long.TryParse(userIdString, out long userId))
+		{
+			return BadRequest("Упс, ошибка! Необходимо перезайти в профиль!");
+		}
+
+		var createDto = new CreateScheduleDto(request.Name, request.Description, request.Type, request.WeeksType, null, userId);
+		var result = await _scheduleService.CreateAsync(createDto, cancellationToken);
+
+		if (result.IsFailure)
+		{
+			return BadRequest(result.Error);
+		}
+
+		var scheduleId = result.Value;
+		return Ok(scheduleId);
+	}
+
+	[HttpPost("Institusion")]
+	[Authorize(Roles = AppRoles.InstitusionAdder)]
+	public async Task<ActionResult<long>> CreateForInstitusion(CreateScheduleForInstitusionRequest request, CancellationToken cancellationToken)
 	{
 		var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -159,28 +128,4 @@ public class SchedulesController : ControllerBase
 		var scheduleId = result.Value;
 		return Ok(scheduleId);
 	}
-
-	public record ScheduleResponce(string Name,
-		string? Description,
-		ScheduleType Type,
-		ScheduleWeeksType WeeksType,
-		List<ScheduleMemberResponce> Members,
-		List<LessonResponce> Lessons);
-
-	public record ScheduleByUserResponce(string Name, ScheduleType Type, ScheduleRole Role);
-
-	public record ScheduleMemberResponce(string FirstName,
-		string LastName,
-		ScheduleRole Role);
-
-	public record LessonResponce(string Name,
-		string? Description,
-		string? Audience,
-		string Type,
-		TimeOnly StartTime,
-		TimeOnly EndTime,
-		ScheduleWeeksType WeeksType,
-		DayOfWeek Day);
-
-
 }

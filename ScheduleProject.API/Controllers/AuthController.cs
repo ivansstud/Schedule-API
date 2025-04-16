@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpPost("[action]")]
-	public async Task<ActionResult<UserResponceDto>> Login(UserLoginDto loginDto, CancellationToken cancellationToken = default)
+	public async Task<ActionResult<UserResponce>> Login(UserLoginDto loginDto, CancellationToken cancellationToken = default)
 	{
 		var loginResult = await _authService.LoginAsync(loginDto, cancellationToken);
 
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
 
 		AddAuthTokenToCookie(user.AuthToken!);
 
-		return new UserResponceDto 
+		return new UserResponce 
 		{
 			Login = user.Login,
 			FirstName = user.FirstName,
@@ -75,10 +75,10 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpGet("[action]")]
-	public ActionResult<UserResponceDto[]> Users()
+	public ActionResult<UserResponce[]> Users()
 	{
 		var users = _dbContext.Users.Include(x => x.Roles).AsNoTracking().ToList();
-		var responce = users.Select(user => new UserResponceDto
+		var responce = users.Select(user => new UserResponce
 		{
 			Login = user.Login,
 			FirstName = user.FirstName,
