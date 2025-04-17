@@ -23,7 +23,8 @@ builder.Services.AddJwtAuthenication(jwtOptions);
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<ISchedulesService, SchedulesService>();
+builder.Services.AddScoped<IUserRolesService, UserRolesService>();
 
 var app = builder.Build();
 

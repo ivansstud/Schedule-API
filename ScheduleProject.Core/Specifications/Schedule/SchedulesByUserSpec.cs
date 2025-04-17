@@ -1,9 +1,9 @@
 ﻿using Ardalis.Specification;
 using ScheduleProject.Core.Entities;
 
-namespace ScheduleProject.Core.Specifications;
+namespace ScheduleProject.Core.Specifications.Schedule;
 
-public class SchedulesByUserSpec : Specification<Schedule>
+public class SchedulesByUserSpec : Specification<Entities.Schedule>
 {
 	public SchedulesByUserSpec(long userId, bool isTracking = true, bool includeDeleted = false)
 	{

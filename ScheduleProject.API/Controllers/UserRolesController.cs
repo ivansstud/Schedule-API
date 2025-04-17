@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ScheduleProject.API.Dtos.Responce.UserRole;
+using ScheduleProject.API.Extensions.Mapping;
+using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Entities.Enums;
-using ScheduleProject.Infrastracture.DAL.EF;
 
 namespace ScheduleProject.API.Controllers;
 
@@ -10,35 +12,48 @@ namespace ScheduleProject.API.Controllers;
 [Authorize(Roles = AppRoles.Administrator)]
 public class UserRolesController : ControllerBase
 {
-	private readonly AppDbContext _dbContext;
 
-	public UserRolesController(AppDbContext dbContext)
+	private readonly IUserRolesService _rolesService;
+
+	public UserRolesController(IUserRolesService rolesService)
 	{
-		_dbContext = dbContext;
+		_rolesService = rolesService;
+	}
+
+	[HttpGet]
+	public async Task<List<UserRoleResponce>> GetAll(CancellationToken cancellationToken)
+	{
+		var roles = await _rolesService.GetAll(false, cancellationToken);
+
+		return roles.Select(role => role.MapToResponce()).ToList();
 	}
 
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Give(GiveRoleRequest request, CancellationToken cancellationToken)
 	{
-		var user = await _dbContext.Users.FindAsync(request.UserId, cancellationToken);
+		var result = await _rolesService.GiveToUser(request.UserId, request.RoleId, cancellationToken);
 
-		if (user is null)
+		if (result.IsFailure)
 		{
-			return BadRequest("Пользователя с таким Id не существует");
+			return BadRequest(result.Error);
 		}
 
-		var role = await _dbContext.UserRoles.FindAsync(request.RoleId, cancellationToken);
+		return Ok();
+	}
 
-		if (role is null)
+	[HttpPost("[action]")]
+	public async Task<IActionResult> Take(RemoveRoleRequest request, CancellationToken cancellationToken)
+	{
+		var result = await _rolesService.TakeFromUser(request.UserId, request.RoleId, cancellationToken);
+
+		if (result.IsFailure)
 		{
-			return BadRequest("Роли с таким Id не существует");
+			return BadRequest(result.Error);
 		}
-
-		user.AddRole(role);
-		await _dbContext.SaveChangesAsync(cancellationToken);
 
 		return Ok();
 	}
 
 	public sealed record GiveRoleRequest(long UserId, long RoleId);
+	public sealed record RemoveRoleRequest(long UserId, long RoleId);
 }

@@ -5,8 +5,9 @@ using ScheduleProject.API.Dtos.Responce.Schedule;
 using ScheduleProject.API.Extensions.Mapping;
 using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Dtos.Schedule;
+using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
-using ScheduleProject.Core.Specifications;
+using ScheduleProject.Core.Specifications.Schedule;
 using System.Security.Claims;
 
 namespace ScheduleProject.API.Controllers;
@@ -16,9 +17,9 @@ namespace ScheduleProject.API.Controllers;
 [Route("api/[controller]")]
 public partial class SchedulesController : ControllerBase
 {
-	private readonly IScheduleService _scheduleService;
+	private readonly ISchedulesService _scheduleService;
 
-	public SchedulesController(IScheduleService scheduleService)
+	public SchedulesController(ISchedulesService scheduleService)
 	{
 		_scheduleService = scheduleService;
 	}
@@ -34,14 +35,12 @@ public partial class SchedulesController : ControllerBase
 			return BadRequest();
 		}
 
-		var schedule = result.Value;
-
-		if (schedule is null)
+		if (result.Value is null)
 		{
 			return NotFound();
 		}
 
-		return schedule.MapToInfoResponce();
+		return result.Value.MapToInfoResponce();
 	}
 
 	[HttpGet]
@@ -57,12 +56,10 @@ public partial class SchedulesController : ControllerBase
 		var specification = new SchedulesByUserSpec(userId, isTracking: false);
 		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
 
-		if (result.IsFailure)
+		if (!result.TryGetValue(out List<Schedule>? schedules))
 		{
 			return BadRequest(result.Error);
 		}
-
-		var schedules = result.Value;
 
 		return schedules.Select(schedule => schedule.MapToPreviewResponse(userId)).ToArray();
 	}
@@ -74,12 +71,10 @@ public partial class SchedulesController : ControllerBase
 		var specification = new AllSchedulesWithMembersAndLessonsSpec(isTracking: false, includeDeleted: true);
 		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
 
-		if (result.IsFailure)
+		if (!result.TryGetValue(out List<Schedule>? schedules))
 		{
 			return BadRequest(result.Error);
 		}
-
-		var schedules = result.Value;
 
 		return schedules.Select(schedule => schedule.MapToFullInfoResponse()).ToArray();
 	}
@@ -97,12 +92,11 @@ public partial class SchedulesController : ControllerBase
 		var createDto = new CreateScheduleDto(request.Name, request.Description, request.Type, request.WeeksType, null, userId);
 		var result = await _scheduleService.CreateAsync(createDto, cancellationToken);
 
-		if (result.IsFailure)
+		if (!result.TryGetValue(out long scheduleId))
 		{
 			return BadRequest(result.Error);
 		}
 
-		var scheduleId = result.Value;
 		return Ok(scheduleId);
 	}
 
@@ -120,12 +114,11 @@ public partial class SchedulesController : ControllerBase
 		var createDto = new CreateScheduleDto(request.Name, request.Description, request.Type, request.WeeksType, request.InstitusionId, userId);
 		var result = await _scheduleService.CreateAsync(createDto, cancellationToken);
 
-		if (result.IsFailure)
+		if (!result.TryGetValue(out long scheduleId))
 		{
 			return BadRequest(result.Error);
 		}
 
-		var scheduleId = result.Value;
 		return Ok(scheduleId);
 	}
 }

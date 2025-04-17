@@ -72,11 +72,27 @@ public class AppUser : EntityBase
 		}
 	}
 
+	public void RemoveRole(UserRole role)
+	{
+		if (_roles.Any(x => x.Id == role.Id))
+		{
+			_roles.Remove(role);
+		}
+	}
+
 	public void AddMemberships(ScheduleMember member)
 	{
 		if (!_scheduleMemberships.Any(x => x.Id == member.Id))
 		{
 			_scheduleMemberships.Add(member);
+		}
+	}
+
+	public void RemoveMemberships(ScheduleMember member)
+	{
+		if (_scheduleMemberships.Any(x => x.Id == member.Id))
+		{
+			_scheduleMemberships.Remove(member);
 		}
 	}
 }

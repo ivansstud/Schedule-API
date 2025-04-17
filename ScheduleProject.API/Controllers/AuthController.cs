@@ -125,6 +125,7 @@ public class AuthController : ControllerBase
 	{
 		return Ok(new
 		{
+			Id = User.FindFirstValue(ClaimTypes.NameIdentifier),
 			Name = User.Identity?.Name,
 			Login = User.FindFirstValue(CustomClaimTypes.Login),
 			Roles = User.FindAll(ClaimTypes.Role).Select(x => x.Value),

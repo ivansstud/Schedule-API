@@ -5,7 +5,7 @@ using ScheduleProject.Core.Entities;
 
 namespace ScheduleProject.Core.Abstractions.Services;
 
-public interface IScheduleService
+public interface ISchedulesService
 {
 	Task<Result<long>> CreateAsync(CreateScheduleDto createDto, CancellationToken cancellationToken = default);
 

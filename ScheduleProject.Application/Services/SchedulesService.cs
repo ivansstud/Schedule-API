@@ -5,15 +5,14 @@ using ScheduleProject.Core.Abstractions.Services;
 using ScheduleProject.Core.Dtos.Schedule;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Core.Entities.Enums;
-using ScheduleProject.Core.Specifications;
 
 namespace ScheduleProject.Application.Services;
 
-public class ScheduleService : IScheduleService
+public class SchedulesService : ISchedulesService
 {
 	private readonly IRepository<Schedule> _scheduleRepository;
 
-	public ScheduleService(IRepository<Schedule> scheduleRepository)
+	public SchedulesService(IRepository<Schedule> scheduleRepository)
 	{
 		_scheduleRepository = scheduleRepository;
 	}

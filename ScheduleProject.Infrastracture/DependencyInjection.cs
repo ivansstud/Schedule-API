@@ -48,5 +48,7 @@ public static class DependencyInjection
 	public static void AddRepositories(this IServiceCollection services)
 	{
 		services.AddScoped<IRepository<Schedule>, RepositoryBase<Schedule>>();
+		services.AddScoped<IRepository<UserRole>, RepositoryBase<UserRole>>();
+		services.AddScoped<IRepository<AppUser>, RepositoryBase<AppUser>>();
 	}
 }
