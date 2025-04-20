@@ -2,17 +2,9 @@
 
 namespace ScheduleProject.Core.Specifications.UserRole;
 
-public class UserRolesSpec : Specification<Entities.UserRole>
+public class UserRolesSpec : SpecificationBase<Entities.UserRole>
 {
-	public UserRolesSpec(bool isTracking = true, bool includeDeleted = false)
+	public UserRolesSpec(bool isTracking = true, bool includeDeleted = false) : base(isTracking, includeDeleted)
 	{
-		if (!includeDeleted)
-		{
-			Query.Where(x => !x.IsDeleted);
-		}
-		if (!isTracking)
-		{
-			Query.AsNoTracking();
-		}
 	}
 }

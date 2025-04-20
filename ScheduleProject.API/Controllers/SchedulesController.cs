@@ -54,7 +54,7 @@ public partial class SchedulesController : ControllerBase
 		}
 
 		var specification = new SchedulesByUserSpec(userId, isTracking: false);
-		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
+		var result = await _scheduleService.GetListBySpecificationAsync(specification, cancellationToken);
 
 		if (!result.TryGetValue(out List<Schedule>? schedules))
 		{
@@ -68,8 +68,8 @@ public partial class SchedulesController : ControllerBase
 	[Authorize(Roles = AppRoles.Administrator)]
 	public async Task<ActionResult<ScheduleFullInfoResponce[]>> GetAll(CancellationToken cancellationToken)
 	{
-		var specification = new AllSchedulesWithMembersAndLessonsSpec(isTracking: false, includeDeleted: true);
-		var result = await _scheduleService.GetListBySpecification(specification, cancellationToken);
+		var specification = new SchedulesWithMembersAndLessonsSpec(isTracking: false, includeDeleted: false);
+		var result = await _scheduleService.GetListBySpecificationAsync(specification, cancellationToken);
 
 		if (!result.TryGetValue(out List<Schedule>? schedules))
 		{

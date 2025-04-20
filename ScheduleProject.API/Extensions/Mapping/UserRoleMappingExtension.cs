@@ -11,6 +11,7 @@ public static class UserRoleMappingExtension
 		{
 			Id = role.Id,
 			Name = role.Name,
+			IsDeleted = role.IsDeleted
 		};
 	}
 }

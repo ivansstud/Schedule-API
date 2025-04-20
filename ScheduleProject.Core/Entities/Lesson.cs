@@ -63,7 +63,7 @@ public class Lesson : EntityBase
 		LessonType lessonType,
 		TimeOnly startTime,
 		TimeOnly endTime,
-		ScheduleWeeksType sheduleWeeksType,
+		ScheduleWeeksType scheduleWeeksType,
 		DayOfWeek dayOfWeek,
 		long scheduleId)
 	{
@@ -98,7 +98,7 @@ public class Lesson : EntityBase
 			lessonType,
 			startTime,
 			endTime,
-			sheduleWeeksType,
+			scheduleWeeksType,
 			dayOfWeek,
 			scheduleId
 		);

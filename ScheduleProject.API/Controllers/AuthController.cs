@@ -109,12 +109,12 @@ public class AuthController : ControllerBase
 
 		var tokenResult = await _authService.RefreshTokensAsync(new (Login: login, RefreshToken: refreshToken));
 
-		if (tokenResult.IsFailure)
+		if (!tokenResult.TryGetValue(out var token))
 		{
 			return BadRequest(tokenResult.Error);
 		}
 
-		AddAuthTokenToCookie(tokenResult.Value);
+		AddAuthTokenToCookie(token);
 
 		return Ok();
 	}

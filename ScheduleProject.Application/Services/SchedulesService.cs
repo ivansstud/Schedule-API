@@ -40,7 +40,7 @@ public class SchedulesService : ISchedulesService
 		return newSchedule.Id;
 	}
 
-	public async Task<Result<List<Schedule>>> GetListBySpecification(ISpecification<Schedule> specification, CancellationToken cancellationToken = default)
+	public async Task<Result<List<Schedule>>> GetListBySpecificationAsync(ISpecification<Schedule> specification, CancellationToken cancellationToken = default)
 	{
 		return await _scheduleRepository.GetListBySpecificationAsync(specification, cancellationToken);
 	}

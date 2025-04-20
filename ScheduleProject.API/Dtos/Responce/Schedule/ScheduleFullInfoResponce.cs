@@ -4,6 +4,7 @@ namespace ScheduleProject.API.Dtos.Responce.Schedule;
 
 public sealed class ScheduleFullInfoResponce
 {
+	public long Id { get; set; }
 	public string Name { get; set; } = null!;
 	public string? Description { get; set; }
 	public ScheduleType Type { get; set; }

@@ -21,7 +21,7 @@ public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : clas
 		return entity;
 	}
 
-	public void Delete(TEntity entity, CancellationToken cancellationToken = default)
+	public void Remove(TEntity entity)
 	{
 		_dbContext.Remove(entity);
 	}

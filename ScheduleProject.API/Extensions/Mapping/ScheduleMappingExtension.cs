@@ -2,7 +2,6 @@
 using ScheduleProject.API.Dtos.Responce.Schedule;
 using ScheduleProject.API.Helpers;
 using System.Data;
-using ScheduleProject.Core.Entities.Enums;
 
 namespace ScheduleProject.API.Extensions.Mapping;
 
@@ -12,6 +11,7 @@ public static class ScheduleMappingExtension
 	{
 		return new ScheduleFullInfoResponce
 		{
+			Id = schedule.Id,
 			Name = schedule.Name,
 			Description = schedule.Description,
 			Type = schedule.Type,

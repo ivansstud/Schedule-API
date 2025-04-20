@@ -50,5 +50,6 @@ public static class DependencyInjection
 		services.AddScoped<IRepository<Schedule>, RepositoryBase<Schedule>>();
 		services.AddScoped<IRepository<UserRole>, RepositoryBase<UserRole>>();
 		services.AddScoped<IRepository<AppUser>, RepositoryBase<AppUser>>();
+		services.AddScoped<IRepository<Lesson>, RepositoryBase<Lesson>>();
 	}
 }

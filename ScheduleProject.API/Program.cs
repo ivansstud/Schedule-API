@@ -25,6 +25,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISchedulesService, SchedulesService>();
 builder.Services.AddScoped<IUserRolesService, UserRolesService>();
+builder.Services.AddScoped<ILessonsService, LessonsService>();
 
 var app = builder.Build();
 

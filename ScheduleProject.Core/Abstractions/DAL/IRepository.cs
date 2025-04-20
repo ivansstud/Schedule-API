@@ -4,6 +4,6 @@
 	{
         Task CommitAsync(CancellationToken cancellationToken = default);
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
-        void Delete(TEntity entity, CancellationToken cancellationToken = default);
+        void Remove(TEntity entity);
     }
 }

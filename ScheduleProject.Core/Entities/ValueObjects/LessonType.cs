@@ -23,7 +23,7 @@ public class LessonType : ValueObject
 
 		if (value.Length > MaxValueLength)
 		{
-			return Result.Failure<LessonType>($"Тип занятия не может быть больше {MaxValueLength} символов");
+			return Result.Failure<LessonType>($"Формат занятия не может быть больше {MaxValueLength} символов");
 		}
 
 		return new LessonType(value);
