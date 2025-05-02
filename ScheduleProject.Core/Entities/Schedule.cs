@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
+using ScheduleProject.Core.Entities.ValueObjects;
 
 #pragma warning disable CS8618
 

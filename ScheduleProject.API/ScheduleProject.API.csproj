@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
@@ -14,13 +15,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.13" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ScheduleProject.Application\ScheduleProject.Application.csproj" />
     <ProjectReference Include="..\ScheduleProject.Core\ScheduleProject.Core.csproj" />
-    <ProjectReference Include="..\ScheduleProject.Infrastracture\ScheduleProject.Infrastracture.csproj" />
+    <ProjectReference Include="..\ScheduleProject.Infrastructure\ScheduleProject.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

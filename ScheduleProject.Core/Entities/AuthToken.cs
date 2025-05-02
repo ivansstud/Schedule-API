@@ -1,5 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using ScheduleProject.Core.Entities.Abstractions;
+﻿using ScheduleProject.Core.Entities.Abstractions;
 
 namespace ScheduleProject.Core.Entities;
 
@@ -54,7 +53,7 @@ public class AuthToken : EntityBase
 	{
 		AccessToken = accessToken;
 		RefreshToken = refreshToken;
-		RefreshTokenExpiryDate = DateTime.Now.AddDays(refreshTokenExpiryDays);
-		AccessTokenExpiryDate = DateTime.Now.AddMinutes(accessTokenExpiryMinutes);
+		RefreshTokenExpiryDate = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
+		AccessTokenExpiryDate = DateTime.UtcNow.AddMinutes(accessTokenExpiryMinutes);
 	}
 }

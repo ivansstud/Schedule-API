@@ -27,7 +27,7 @@ public class Lesson : EntityBase
 		TimeOnly startTime,
 		TimeOnly endTime,
 		ScheduleWeeksType sheduleWeeksType,
-		DayOfWeek dayOfWeek,
+		Day day,
 		long scheduleId)
 	{
 		Name = name;
@@ -37,8 +37,8 @@ public class Lesson : EntityBase
 		LessonType = lessonType;
 		StartTime = startTime;
 		EndTime = endTime;
-		SheduleWeeksType = sheduleWeeksType;
-		DayOfWeek = dayOfWeek;
+		ScheduleWeeksType = sheduleWeeksType;
+		Day = day;
 		ScheduleId = scheduleId;
 	}
 
@@ -49,8 +49,8 @@ public class Lesson : EntityBase
 	public LessonType LessonType { get; private set; }
 	public TimeOnly StartTime { get; private set; }
 	public TimeOnly EndTime { get; private set; }
-	public ScheduleWeeksType SheduleWeeksType { get; private set; }
-	public DayOfWeek DayOfWeek { get; private set; }
+	public ScheduleWeeksType ScheduleWeeksType { get; private set; }
+	public Day Day { get; private set; }
 
 	public long ScheduleId { get; private set; }
 	public Schedule Schedule { get; private set; }
@@ -64,7 +64,7 @@ public class Lesson : EntityBase
 		TimeOnly startTime,
 		TimeOnly endTime,
 		ScheduleWeeksType scheduleWeeksType,
-		DayOfWeek dayOfWeek,
+		Day day,
 		long scheduleId)
 	{
 		name = name.Trim();
@@ -90,7 +90,7 @@ public class Lesson : EntityBase
 			return Result.Failure<Lesson>($"Время начала занятия не может быть позже времени окончания");
 		}
 
-		var result = new Lesson(
+		return new Lesson(
 			name,
 			description,
 			teacherName,
@@ -99,9 +99,8 @@ public class Lesson : EntityBase
 			startTime,
 			endTime,
 			scheduleWeeksType,
-			dayOfWeek,
+			day,
 			scheduleId
-		);
-		return result;
+		); 
 	}
 }

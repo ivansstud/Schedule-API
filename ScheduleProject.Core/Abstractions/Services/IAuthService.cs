@@ -1,16 +1,20 @@
-﻿using CSharpFunctionalExtensions;
-using ScheduleProject.Core.Dtos.Auth;
-using ScheduleProject.Core.Entities;
+﻿using ScheduleProject.Core.Entities;
 
 namespace ScheduleProject.Core.Abstractions.Services;
 
 public interface IAuthService
 {
-	Task<Result> RegisterAsync(UserRegisterDto registerDto, CancellationToken cancellationToken = default);
+	public string? GetCurrentAccessToken();
 
-	Task<Result<AppUser>> LoginAsync(UserLoginDto loginDto, CancellationToken cancellationToken = default);
+	public string? GetCurrentRefreshToken();
 
-	Task<Result<AuthToken>> RefreshTokensAsync(RefreshTokensDto refreshDto, CancellationToken cancellationToken = default);
+	public void AddTokensToClient(string accessToken, string refreshToken);
 
-	string? GetLoginFromExpiredToken(string jwtToken);
+	public void RemoveTokensFromClient();
+
+	bool TryGetLoginFromExpiredToken(string? accessToken, out string login);
+
+	void UpdateAuthToken(AppUser user);
+
+	AuthToken CreateAuthToken(long userId, string login, string name, List<string> roles);
 }

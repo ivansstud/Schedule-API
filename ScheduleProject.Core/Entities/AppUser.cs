@@ -35,8 +35,8 @@ public class AppUser : EntityBase
 	public string LastName { get; private set; }
 	public string Login { get; private set; }
 	public string HashedPassword { get; private set; }
-	public long? AuthTokenId { get; private set; }
-	public AuthToken? AuthToken { get; private set; }
+	public long? AuthTokenId { get; private set; } = null;
+	public AuthToken? AuthToken { get; private set; } = null;
 	public IReadOnlyList<ScheduleMember> ScheduleMemberships => _scheduleMemberships;
 	public IReadOnlyList<UserRole> Roles => _roles;
 

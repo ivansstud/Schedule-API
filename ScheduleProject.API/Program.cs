@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.CookiePolicy;
 using Scalar.AspNetCore;
-using ScheduleProject.Application.Services;
-using ScheduleProject.Core.Abstractions.Services;
-using ScheduleProject.Infrastracture;
-using ScheduleProject.Infrastracture.Auth.Options;
+using ScheduleProject.API.Endpoints;
+using ScheduleProject.Application.Requests.Auth;
+using ScheduleProject.Infrastructure;
+using ScheduleProject.Infrastructure.Auth.Options;
+using ScheduleProject.Infrastructure.Handlers.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -12,20 +13,27 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
-builder.Services.AddMSSQLDbContext(configuration.GetConnectionString("MSSQL")!);
+//builder.Services.AddPostgreSqlDbContext(configuration.GetConnectionString("PostgreSQL")!);
+builder.Services.AddMssqlDbContext(configuration.GetConnectionString("MSSQL")!);
 
-builder.Services.AddRepositories();
+builder.Services.AddUnitOfWork();
 
 builder.Services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
 
-builder.Services.AddJwtAuthenication(jwtOptions);
+builder.Services.AddJwtAuthentication(jwtOptions);
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<ISchedulesService, SchedulesService>();
-builder.Services.AddScoped<IUserRolesService, UserRolesService>();
-builder.Services.AddScoped<ILessonsService, LessonsService>();
+builder.Services.AddMediatR(c =>
+{
+	c.RegisterServicesFromAssemblies(typeof(UserRegisterCommand).Assembly, typeof(UserRegisterHandler).Assembly);
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient(provider =>
+	provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User
+	?? throw new InvalidOperationException("User not available"));
 
 var app = builder.Build();
 
@@ -44,7 +52,10 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapSchedulesEndpoints();
 
-app.MapControllers();
+app.MapAuthEndpoints();
+app.MapLessonsEndpoints();
+
 
 app.Run();

@@ -4,38 +4,39 @@ namespace ScheduleProject.Core.Entities.ValueObjects;
 
 public class LessonType : ValueObject
 {
-	public const int MaxValueLength = 32;
+	public const int MaxLength = 32;
 
-	private LessonType(string value)
+	public static readonly LessonType LaboratoryWork = new ("Лабораторная работа");
+	public static readonly LessonType PracticalLesson = new("Практическое занятие");
+	public static readonly LessonType Consultation = new("Консультация");
+	public static readonly LessonType Lecture = new("Лекция");
+
+	private LessonType(string name)
 	{
-		Value = value;
+		Name = name;
 	}
 	
-	public static LessonType LaboratoryWork => new ("Лабораторная работа");
-	public static LessonType PracticalLesson => new ("Практическое занятие");
-	public static LessonType Consultation => new ("Консультация");
-	public static LessonType Lecture => new ("Лекция");
-	public string Value { get; private set; }
+	public string Name { get; private set; }
 
-	public static Result<LessonType> Create(string value)
+	public static Result<LessonType> Create(string name)
 	{
-		value = value.Trim();
+		name = name.Trim();
 
-		if (value.Length > MaxValueLength)
+		if (name.Length > MaxLength)
 		{
-			return Result.Failure<LessonType>($"Формат занятия не может быть больше {MaxValueLength} символов");
+			return Result.Failure<LessonType>($"Формат занятия не может быть длинее {MaxLength} символов");
 		}
 
-		return new LessonType(value);
+		return new LessonType(name);
 	}
 
 	public static List<string> GetValues()
 	{
-		return ["Лабораторная работа", "Практическое занятие", "Лекция", "Консультация"];
+		return [LaboratoryWork.Name, PracticalLesson.Name, Consultation.Name, Lecture.Name];
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()
 	{
-		yield return Value;
+		yield return Name;
 	}
 }
