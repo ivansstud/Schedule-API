@@ -30,7 +30,7 @@ public class DeleteLessonHandler : IRequestHandler<DeleteLessonCommand, Result>
 
             if (lesson is null)
             {
-                _logger.LogWarning("Попытка удалить Lesson с несуществующим {Id}", request.Id);
+                _logger.LogWarning("Попытка удалить Lesson с несуществующим Id: {Id}", request.Id);
                 return Result.Failure($"Такого занятия не найдено");
             }
 
@@ -45,7 +45,7 @@ public class DeleteLessonHandler : IRequestHandler<DeleteLessonCommand, Result>
         }
         catch (Exception ex)
         {
-            _logger.LogError("{Exception}:", ex.Message + ex.InnerException?.Message);
+            _logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
             
             await _unitOfWork.RollbackAsync();
             

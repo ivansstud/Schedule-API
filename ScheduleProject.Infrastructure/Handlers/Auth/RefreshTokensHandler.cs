@@ -62,7 +62,7 @@ public class RefreshTokensHandler : IRequestHandler<RefreshTokensCommand, Result
         }
         catch (Exception ex)
         {
-            _logger.LogError("{Exception}:", ex.Message + ex.InnerException?.Message);
+            _logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
             
             await _unitOfWork.RollbackAsync();
 			_authService.RemoveTokensFromClient();

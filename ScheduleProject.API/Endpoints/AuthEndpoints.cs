@@ -1,13 +1,7 @@
 using System.Security.Claims;
-using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Options;
 using ScheduleProject.Application.Requests.Auth;
-using ScheduleProject.Core.Entities;
-using ScheduleProject.Core.Entities.Enums;
-using ScheduleProject.Infrastructure.Auth.Enums;
 using ScheduleProject.Infrastructure.Auth.Extensions;
-using ScheduleProject.Infrastructure.Auth.Options;
 
 namespace ScheduleProject.API.Endpoints;
 

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.CookiePolicy;
 using Scalar.AspNetCore;
 using ScheduleProject.API.Endpoints;
+using ScheduleProject.API.Enums;
 using ScheduleProject.Application.Requests.Auth;
+using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Infrastructure;
+using ScheduleProject.Infrastructure.Auth.Enums;
 using ScheduleProject.Infrastructure.Auth.Options;
 using ScheduleProject.Infrastructure.Handlers.Auth;
 
@@ -23,7 +26,11 @@ var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!
 
 builder.Services.AddJwtAuthentication(jwtOptions);
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy(AppPolicies.AdminOnly, policy =>
+	{
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.Administrator);
+	});
 
 builder.Services.AddMediatR(c =>
 {
@@ -34,6 +41,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient(provider =>
 	provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User
 	?? throw new InvalidOperationException("User not available"));
+
+
 
 var app = builder.Build();
 

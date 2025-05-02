@@ -68,7 +68,7 @@ public class CreateLessonHandler : IRequestHandler<CreateLessonCommand, Result>
         }
         catch (Exception ex)
         {
-            _logger.LogError("{Exception}:", ex.Message + ex.InnerException?.Message);
+            _logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
             
             await _unitOfWork.RollbackAsync();
             

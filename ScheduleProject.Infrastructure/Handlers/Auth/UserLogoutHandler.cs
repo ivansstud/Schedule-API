@@ -25,7 +25,7 @@ public class UserLogoutHandler : IRequestHandler<UserLogoutRequest>
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("{Exception}:", ex.Message + ex.InnerException?.Message);
+			_logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
 		}
 	}
 }

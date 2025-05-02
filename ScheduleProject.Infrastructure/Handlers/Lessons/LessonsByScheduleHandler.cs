@@ -50,7 +50,7 @@ public class LessonsByScheduleHandler : IRequestHandler<LessonsByScheduleRequest
         }
         catch (Exception ex)
         {
-            _logger.LogError("{Exception}:", ex.Message + ex.InnerException?.Message);
+            _logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
             
             return Result.Failure<LessonByScheduleDto[]>("Упс! При получении занятий произошла ошибка.");
         }
