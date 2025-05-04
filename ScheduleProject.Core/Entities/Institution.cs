@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Abstractions;
 
-
 #pragma warning disable CS8618 
 
 namespace ScheduleProject.Core.Entities;
@@ -29,11 +28,12 @@ public class Institution : EntityBase
 	public string Name { get; private set; }
 	public string ShortName { get; private set; }
 	public string? Description { get; private set; }
+	public long OwnerId { get; private set; }
+	public AppUser Owner { get; private set; }
 	public IReadOnlyList<Schedule> Schedules => _schedules;
 
 	public static Result<Institution> Create(string name, string shortName, string? description)
 	{
-
 		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
 			return Result.Failure<Institution>($"Название учреждения должно содержать от {MinNameLength} до {MaxNameLength} символов");

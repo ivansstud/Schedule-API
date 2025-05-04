@@ -26,6 +26,11 @@ class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
 			.IsRequired(false)
 			.HasMaxLength(Institution.MaxDescriptionLength);
 
+		builder.HasOne(x => x.Owner)
+			.WithMany()
+			.HasForeignKey(x => x.OwnerId)
+			.OnDelete(DeleteBehavior.NoAction); 
+
 		builder.HasMany(x => x.Schedules)
 			.WithOne(x => x.Institution)
 			.HasForeignKey(x => x.InstitutionId)
