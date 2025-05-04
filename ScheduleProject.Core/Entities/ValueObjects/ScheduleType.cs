@@ -15,7 +15,7 @@ public class ScheduleType : ValueObject
 
 	private static readonly IEnumerable<ScheduleType> _all = [Custom, University, College, School];
 
-	private ScheduleType() { }
+	private ScheduleType() { } // Для EF Core
 
 	private ScheduleType(string value, int code)
 	{

@@ -13,7 +13,7 @@ public class ScheduleWeeksType : ValueObject
 
 	private static readonly IEnumerable<ScheduleWeeksType> _all = [Cyclic, Permanent];
 
-	private ScheduleWeeksType() { }
+	private ScheduleWeeksType() { } // Для EF Core
 
 	private ScheduleWeeksType(string value, int code)
 	{

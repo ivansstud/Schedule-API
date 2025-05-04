@@ -2,5 +2,6 @@
 
 public interface IDeletable
 {
-	protected bool IsDeleted { get; }
+	bool IsDeleted { get; }
+	DateTime? DeletionDate { get; }
 }

@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 
+#pragma warning disable CS8618
+
 namespace ScheduleProject.Core.Entities.ValueObjects;
 
 public class LessonType : ValueObject
@@ -10,6 +12,8 @@ public class LessonType : ValueObject
 	public static readonly LessonType PracticalLesson = new("Практическое занятие");
 	public static readonly LessonType Consultation = new("Консультация");
 	public static readonly LessonType Lecture = new("Лекция");
+
+	public LessonType() { } // Для EF Core
 
 	private LessonType(string name)
 	{

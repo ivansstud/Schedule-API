@@ -60,7 +60,7 @@ public class GetAllSchedulesHandler : IRequestHandler<GetAllSchedulesRequest, Re
 		{
 			_logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);
 
-			return Result.Failure<ScheduleByUserDto[]>("Упс! Не удалось загрузить расписания.");
+			return Result.Failure<ScheduleDto[]>("Упс! Не удалось загрузить расписания.");
 		}
 	}
 }

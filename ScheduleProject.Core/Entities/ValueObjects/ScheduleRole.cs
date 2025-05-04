@@ -14,7 +14,7 @@ public class ScheduleRole : ValueObject
 
 	private static readonly IEnumerable<ScheduleRole> _all = [Member, Creator, Moderator];
 
-	private ScheduleRole() { }
+	private ScheduleRole() { } // Для EF Core
 
 	private ScheduleRole(string name, int value)
 	{

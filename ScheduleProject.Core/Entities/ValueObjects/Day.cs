@@ -14,12 +14,11 @@ public class Day : ValueObject
 	public static readonly Day Thursday = new ("Чт", 4);
 	public static readonly Day Friday = new ("Пт", 5);
 	public static readonly Day Saturday = new ("Сб", 6);
-	public static readonly Day Sunday = new ("Вск", 7);
+	public static readonly Day Sunday = new ("Вс", 7);
 
-	private static readonly IEnumerable<Day> _all =
-		[Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday];
+	private static readonly IEnumerable<Day> _all = [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday];
 
-	private Day() { }
+	private Day() { } // Для EF Core
 
 	private Day(string name, int value)
 	{
