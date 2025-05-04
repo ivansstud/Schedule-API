@@ -30,6 +30,18 @@ builder.Services.AddAuthorizationBuilder()
 	.AddPolicy(AppPolicies.AdminOnly, policy =>
 	{
 		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.Administrator);
+	})
+	.AddPolicy(AppPolicies.InstitusionsUser, policy =>
+	{
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.InstitusionRemover);
+	})
+	.AddPolicy(AppPolicies.InstitusionAdder, policy =>
+	{
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder);
+	})
+	.AddPolicy(AppPolicies.InstitusionRemover, policy =>
+	{
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionRemover);
 	});
 
 builder.Services.AddMediatR(c =>
@@ -41,7 +53,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient(provider =>
 	provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User
 	?? throw new InvalidOperationException("User not available"));
-
 
 
 var app = builder.Build();
