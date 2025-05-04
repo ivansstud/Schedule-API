@@ -4,9 +4,9 @@ using ScheduleProject.Application.DTOs.Lesson;
 
 namespace ScheduleProject.Application.Requests.Lessons;
 
-public class LessonsByScheduleRequest : IRequest<Result<LessonByScheduleDto[]>>
+public class GetLessonsByScheduleRequest : IRequest<Result<LessonByScheduleDto[]>>
 {
-    public LessonsByScheduleRequest(long scheduleId)
+    public GetLessonsByScheduleRequest(long scheduleId)
     {
         ScheduleId = scheduleId;
     }

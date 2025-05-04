@@ -53,15 +53,15 @@ public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Resu
 				return Result.Failure(newScheduleResult.Error);
 			}
 
-			var isUserExists = await _unitOfWork.Db
+			var user = await _unitOfWork.Db
 				.Set<AppUser>()
 				.Where(x => x.Id == userId && x.IsDeleted == false)
-				.AnyAsync(cancellationToken);
+				.FirstOrDefaultAsync(cancellationToken);
 
-			if (isUserExists == false)
+			if (user == null)
 			{
 				_logger.LogError("Не удалось найти пользователя в БД по Id в токене. UserId: {Id}:", userId);
-				return Result.Failure("Упс! Непредвиденная ошибка. Необходимо повторить вход после перезагрузки страницы.");
+				return Result.Failure("Упс! Непредвиденная ошибка. Необходимо повторить вход.");
 			}
 
 			await _unitOfWork.BeginTransactionAsync(cancellationToken);
@@ -80,6 +80,10 @@ public class CreateScheduleHandler : IRequestHandler<CreateScheduleCommand, Resu
 			}
 
 			await _unitOfWork.Db.AddAsync(schedule, cancellationToken);
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+			var userMember = ScheduleMember.Create(schedule.Id, userId, ScheduleRole.Creator);
+			user.AddMemberships(userMember);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitAsync(cancellationToken);

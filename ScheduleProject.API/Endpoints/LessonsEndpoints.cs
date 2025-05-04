@@ -1,15 +1,15 @@
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using ScheduleProject.API.Enums;
 using ScheduleProject.Application.Requests.Lessons;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ScheduleProject.API.Endpoints;
 
 public static class LessonsEndpoints
 {
-    public static void MapLessonsEndpoints(this WebApplication app)
+    public static void MapEndpoints(WebApplication app)
     {
-        var authGroup = app.MapGroup("api/lessons")
+        var authGroup = app.MapGroup("api/v1/lessons")
             .RequireAuthorization();
 
         authGroup.MapPost("", CreateHandler);
@@ -24,8 +24,7 @@ public static class LessonsEndpoints
 
 	private static async Task<IResult> GetAllHandler(IMediator mediator, CancellationToken cancellationToken)
 	{
-        var request = new GetAllLessonsRequest();
-		var result = await mediator.Send(request, cancellationToken);
+		var result = await mediator.Send(GetAllLessonsRequest.Instance, cancellationToken);
 
 		if (result.IsFailure)
 		{
@@ -36,41 +35,39 @@ public static class LessonsEndpoints
 	}
 
 	private static async Task<IResult> CreateHandler(CreateLessonCommand command, IMediator mediator, CancellationToken cancellationToken)
-        {
-            var result = await mediator.Send(command, cancellationToken);
+    {
+        var result = await mediator.Send(command, cancellationToken);
             
-            if (result.IsFailure)
-            {
-                return Results.BadRequest(result.Error);
-            }
-
-            return Results.Created();
-
-        }
-        
-        private static async Task<IResult> AllByScheduleHandler(long scheduleId, IMediator mediator, CancellationToken cancellationToken)
+        if (result.IsFailure)
         {
-            var request = new LessonsByScheduleRequest(scheduleId);
-            var result = await mediator.Send(request, cancellationToken);
-            
-            if (result.IsFailure)
-            {
-                return Results.BadRequest(result.Error);
-            }
-
-            return Results.Ok(result.Value);
+            return Results.BadRequest(result.Error);
         }
-        
-        private static async Task<IResult> DeleteHandler(long id, IMediator mediator, CancellationToken cancellationToken)
-        {
-            var request = new DeleteLessonCommand(id);
-            var result = await mediator.Send(request, cancellationToken);
-            
-            if (result.IsFailure)
-            {
-                return Results.BadRequest(result.Error);
-            }
 
-            return Results.NoContent();
-        }
+        return Results.Created();
     }
+        
+    private static async Task<IResult> AllByScheduleHandler(long scheduleId, IMediator mediator, CancellationToken cancellationToken)
+    {
+        var request = new GetLessonsByScheduleRequest(scheduleId);
+        var result = await mediator.Send(request, cancellationToken);
+            
+        if (result.IsFailure)
+        {
+            return Results.BadRequest(result.Error);
+        }
+
+        return Results.Ok(result.Value);
+    }
+        
+    private static async Task<IResult> DeleteHandler([FromBody] DeleteLessonCommand request, IMediator mediator, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(request, cancellationToken);
+            
+        if (result.IsFailure)
+        {
+            return Results.BadRequest(result.Error);
+        }
+
+        return Results.NoContent();
+    }
+}

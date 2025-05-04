@@ -26,8 +26,8 @@ public class UnitOfWork : IUnitOfWork
     {
         if (_currenTransaction != null)
         {
-            return;
-        }
+			throw new Exception("Попытка начать транзакцию при уже имеющейся");
+		}
         
         _currenTransaction = await _context.Database.BeginTransactionAsync(cancellationToken);
     }
@@ -41,7 +41,6 @@ public class UnitOfWork : IUnitOfWork
 
         try
         {
-            await _context.SaveChangesAsync(cancellationToken);
             await _currenTransaction.CommitAsync(cancellationToken);
         }
         catch (Exception)

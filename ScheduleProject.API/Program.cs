@@ -61,10 +61,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapSchedulesEndpoints();
 
-app.MapAuthEndpoints();
-app.MapLessonsEndpoints();
-
+app.MapApplicationEndpoints();
 
 app.Run();

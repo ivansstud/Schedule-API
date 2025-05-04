@@ -26,7 +26,7 @@ public class ScheduleMember : EntityBase
 
 	public ScheduleRole Role { get; private set; }
 
-	public static Result<ScheduleMember> Create(long scheduleId, long userId, ScheduleRole role)
+	public static ScheduleMember Create(long scheduleId, long userId, ScheduleRole role)
 	{
 		return new ScheduleMember(scheduleId, userId, role);
 	}

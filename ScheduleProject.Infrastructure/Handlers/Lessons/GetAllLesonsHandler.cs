@@ -6,6 +6,7 @@ using ScheduleProject.Application.DTOs.Lesson;
 using ScheduleProject.Application.Requests.Lessons;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Infrastructure.DAL.Services;
+using ScheduleProject.Infrastructure.Extensions.Mapping;
 
 namespace ScheduleProject.Infrastructure.Handlers.Lessons;
 
@@ -27,21 +28,7 @@ public class GetAllLesonsHandler : IRequestHandler<GetAllLessonsRequest, Result<
 			 var lessons = await _unitOfWork.Db
 				.Set<Lesson>()
 				.AsNoTracking()
-				.Select(x => new LessonDto
-				{
-					Id = x.Id,
-					Name = x.Name,
-					Audience = x.Audience,
-					TeacherName = x.TeacherName,
-					Day = x.Day,
-					Description = x.Description,
-					EndTime = x.EndTime,
-					StartTime = x.StartTime,
-					ScheduleId = x.ScheduleId,
-					ScheduleWeeksType = x.ScheduleWeeksType,
-					LessonType = x.LessonType,
-					IsDeleted = x.IsDeleted
-				})
+				.Select(x => x.MapToFullDto())
 				.ToArrayAsync(cancellationToken);
 
 			return lessons;

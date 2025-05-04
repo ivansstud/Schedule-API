@@ -7,4 +7,10 @@ namespace ScheduleProject.Application.Requests.Lessons;
 
 public class GetAllLessonsRequest : IRequest<Result<LessonDto[]>>
 {
+	public static readonly GetAllLessonsRequest Instance = new ();
+
+	private GetAllLessonsRequest()
+	{
+		
+	}
 }
