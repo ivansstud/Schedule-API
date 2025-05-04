@@ -15,10 +15,10 @@ namespace ScheduleProject.Infrastructure.Handlers.Schedules;
 public class GetSchedulesByUserHandler : IRequestHandler<GetSchedulesByUserRequest, Result<ScheduleByUserDto[]>>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ILogger<GetAllLesonsHandler> _logger;
+	private readonly ILogger<GetSchedulesByUserHandler> _logger;
 	private readonly ClaimsPrincipal _user;
 
-	public GetSchedulesByUserHandler(IUnitOfWork unitOfWork, ILogger<GetAllLesonsHandler> logger, ClaimsPrincipal user)
+	public GetSchedulesByUserHandler(IUnitOfWork unitOfWork, ILogger<GetSchedulesByUserHandler> logger, ClaimsPrincipal user)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;

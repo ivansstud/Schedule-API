@@ -16,10 +16,10 @@ namespace ScheduleProject.Infrastructure.Handlers.Schedules;
 public class DeleteScheduleHandler : IRequestHandler<DeleteScheduleCommand, Result>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ILogger<GetAllLesonsHandler> _logger;
+	private readonly ILogger<DeleteScheduleHandler> _logger;
 	private readonly ClaimsPrincipal _user;
 
-	public DeleteScheduleHandler(IUnitOfWork unitOfWork, ILogger<GetAllLesonsHandler> logger, ClaimsPrincipal user)
+	public DeleteScheduleHandler(IUnitOfWork unitOfWork, ILogger<DeleteScheduleHandler> logger, ClaimsPrincipal user)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;

@@ -20,10 +20,10 @@ namespace ScheduleProject.Infrastructure.Handlers.Schedules;
 public class GetAllSchedulesHandler : IRequestHandler<GetAllSchedulesRequest, Result<ScheduleDto[]>>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ILogger<GetAllLesonsHandler> _logger;
+	private readonly ILogger<GetAllSchedulesHandler> _logger;
 	private readonly ClaimsPrincipal _user;
 
-	public GetAllSchedulesHandler(IUnitOfWork unitOfWork, ILogger<GetAllLesonsHandler> logger, ClaimsPrincipal user)
+	public GetAllSchedulesHandler(IUnitOfWork unitOfWork, ILogger<GetAllSchedulesHandler> logger, ClaimsPrincipal user)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;
