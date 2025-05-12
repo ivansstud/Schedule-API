@@ -11,18 +11,19 @@ public class Institution : EntityBase
 	public const int MaxShortNameLength = 32;
 	public const int MaxDescriptionLength = 256;
 	
-	public const int MinNameLength = 32;
+	public const int MinNameLength = 16;
 	public const int MinShortNameLength = 3;
 
 	private readonly List<Schedule> _schedules = [];
 
 	private Institution() { } // Для EF Core
 
-	private Institution(string name, string shortName, string? description)
+	private Institution(string name, string shortName, string? description, long ownerId)
 	{
 		Name = name;
 		ShortName = shortName;
 		Description = description;
+		OwnerId = ownerId;
 	}
 
 	public string Name { get; private set; }
@@ -32,7 +33,7 @@ public class Institution : EntityBase
 	public AppUser Owner { get; private set; }
 	public IReadOnlyList<Schedule> Schedules => _schedules;
 
-	public static Result<Institution> Create(string name, string shortName, string? description)
+	public static Result<Institution> Create(string name, string shortName, string? description, long ownerId)
 	{
 		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
@@ -47,8 +48,7 @@ public class Institution : EntityBase
 			return Result.Failure<Institution>($"Описание учреждения не может быть длиннее {MaxDescriptionLength} символов");
 		}
 
-		var result = new Institution(name, shortName, description);
-		return result;
+		return new Institution(name, shortName, description, ownerId);
 	}
 
 	public void AddSchedule(Schedule schedule)

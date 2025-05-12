@@ -35,7 +35,8 @@ public class CreateLessonHandler : IRequestHandler<CreateLessonCommand, Result>
 
             if (scheduleWeeksType is null || day is null)
             {
-				_logger.LogError("Неудачная попытка создания расписания для ScheduleId: {ScheduleId}, Day: {Day}, WeeksType: {WeeksType}", request.ScheduleId, request.Day, request.ScheduleWeeksType);
+				_logger.LogError("Неудачная попытка создания расписания для ScheduleId: {ScheduleId}, Day: {Day}, WeeksType: {WeeksType}",
+                    request.ScheduleId, request.Day, request.ScheduleWeeksType);
 				return Result.Failure("Упс! Не удалось создать занятие.");
 			}
 

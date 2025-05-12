@@ -26,29 +26,12 @@ namespace ScheduleProject.Infrastructure.Migrations
                     RefreshTokenExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuthToken", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Institution",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ShortName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Institution", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +42,8 @@ namespace ScheduleProject.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,7 +63,8 @@ namespace ScheduleProject.Infrastructure.Migrations
                     AuthTokenId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,31 +73,32 @@ namespace ScheduleProject.Infrastructure.Migrations
                         name: "FK_AppUser_AuthToken_AuthTokenId",
                         column: x => x.AuthTokenId,
                         principalTable: "AuthToken",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Schedule",
+                name: "Institution",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    WeeksType = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    InstitutionId = table.Column<long>(type: "bigint", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ShortName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    OwnerId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Schedule", x => x.Id);
+                    table.PrimaryKey("PK_Institution", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Schedule_Institution_InstitutionId",
-                        column: x => x.InstitutionId,
-                        principalTable: "Institution",
+                        name: "FK_Institution_AppUser_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AppUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -142,6 +128,33 @@ namespace ScheduleProject.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Schedule",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    WeeksType = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    InstitutionId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Schedule", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Schedule_Institution_InstitutionId",
+                        column: x => x.InstitutionId,
+                        principalTable: "Institution",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Lesson",
                 columns: table => new
                 {
@@ -159,7 +172,8 @@ namespace ScheduleProject.Infrastructure.Migrations
                     ScheduleId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -183,7 +197,8 @@ namespace ScheduleProject.Infrastructure.Migrations
                     Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,7 +208,7 @@ namespace ScheduleProject.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "AppUser",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ScheduleMember_Schedule_ScheduleId",
                         column: x => x.ScheduleId,
@@ -204,13 +219,13 @@ namespace ScheduleProject.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserRole",
-                columns: new[] { "Id", "CreatedAt", "IsDeleted", "ModifiedAt", "Name" },
+                columns: new[] { "Id", "CreatedAt", "DeletionDate", "IsDeleted", "ModifiedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "DomainUser" },
-                    { 2L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "InstitusionAdder" },
-                    { 3L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "InstitusionRemover" },
-                    { 4L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "Administrator" }
+                    { 1L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "DomainUser" },
+                    { 2L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "InstitusionAdder" },
+                    { 3L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "InstitusionRemover" },
+                    { 4L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Administrator" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -231,6 +246,11 @@ namespace ScheduleProject.Infrastructure.Migrations
                 table: "Institution",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Institution_OwnerId",
+                table: "Institution",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Institution_ShortName",
@@ -286,13 +306,13 @@ namespace ScheduleProject.Infrastructure.Migrations
                 name: "Schedule");
 
             migrationBuilder.DropTable(
-                name: "AppUser");
-
-            migrationBuilder.DropTable(
                 name: "UserRole");
 
             migrationBuilder.DropTable(
                 name: "Institution");
+
+            migrationBuilder.DropTable(
+                name: "AppUser");
 
             migrationBuilder.DropTable(
                 name: "AuthToken");

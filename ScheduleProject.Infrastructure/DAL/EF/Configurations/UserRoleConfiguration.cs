@@ -29,14 +29,12 @@ class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 		var appRoles = AppRoles.GetRoles();
 		var date = new DateTime(2025, 5, 1);
 
-		Enumerable.Range(0, appRoles.Count)
-			.ToList()
-			.ForEach(index =>
-			{
-				builder.HasData(UserRole.Create(
-					id: index + 1,
-					name: appRoles[index],
+		for (int i = 0; i < appRoles.Count; i++)
+		{
+			builder.HasData(UserRole.Create(
+					id: i + 1,
+					name: appRoles[i],
 					createDate: date));
-			});
+		}
 	}
 }

@@ -31,17 +31,17 @@ builder.Services.AddAuthorizationBuilder()
 	{
 		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.Administrator);
 	})
-	.AddPolicy(AppPolicies.InstitusionsUser, policy =>
+	.AddPolicy(AppPolicies.InstitusionsUsers, policy =>
 	{
-		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.InstitusionRemover);
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.InstitusionRemover, AppRoles.Administrator);
 	})
 	.AddPolicy(AppPolicies.InstitusionAdder, policy =>
 	{
-		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder);
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.Administrator);
 	})
 	.AddPolicy(AppPolicies.InstitusionRemover, policy =>
 	{
-		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionRemover);
+		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionRemover, AppRoles.Administrator);
 	});
 
 builder.Services.AddMediatR(c =>

@@ -7,5 +7,6 @@ public static class DependencyInjection
 		AuthEndpoints.MapEndpoints(app);
 		LessonsEndpoints.MapEndpoints(app);
 		SchedulesEndpoints.MapEndpoints(app);
+		InstitusionsEndpoints.MapEndpoints(app);
 	}
 }

@@ -12,8 +12,8 @@ using ScheduleProject.Infrastructure.DAL.EF;
 namespace ScheduleProject.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250502133447_Init")]
-    partial class Init
+    [Migration("20250508035226_ChangeMinNameOfInstitusion")]
+    partial class ChangeMinNameOfInstitusion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
@@ -95,6 +98,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -127,6 +133,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -142,6 +151,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ShortName")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -152,8 +164,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("ShortName")
-                        .IsUnique();
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("ShortName");
 
                     b.ToTable("Institution");
                 });
@@ -177,6 +190,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(128)
@@ -234,6 +250,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
@@ -280,6 +299,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -312,6 +334,9 @@ namespace ScheduleProject.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
@@ -382,9 +407,21 @@ namespace ScheduleProject.Infrastructure.Migrations
                 {
                     b.HasOne("ScheduleProject.Core.Entities.AuthToken", "AuthToken")
                         .WithOne("Owner")
-                        .HasForeignKey("ScheduleProject.Core.Entities.AppUser", "AuthTokenId");
+                        .HasForeignKey("ScheduleProject.Core.Entities.AppUser", "AuthTokenId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AuthToken");
+                });
+
+            modelBuilder.Entity("ScheduleProject.Core.Entities.Institution", b =>
+                {
+                    b.HasOne("ScheduleProject.Core.Entities.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ScheduleProject.Core.Entities.Lesson", b =>
@@ -419,7 +456,7 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.HasOne("ScheduleProject.Core.Entities.AppUser", "User")
                         .WithMany("ScheduleMemberships")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Schedule");

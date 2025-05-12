@@ -47,6 +47,7 @@ class LessonConfiguration : IEntityTypeConfiguration<Lesson>
 
 		builder.HasOne(x => x.Schedule)
 			.WithMany(x => x.Lessons)
-			.HasForeignKey(x => x.ScheduleId);
+			.HasForeignKey(x => x.ScheduleId)
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }

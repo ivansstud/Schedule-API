@@ -20,7 +20,7 @@ class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
 			.HasMaxLength(Institution.MaxShortNameLength);
 
 		builder.HasIndex(x => x.Name).IsUnique();
-		builder.HasIndex(x => x.ShortName).IsUnique();
+		builder.HasIndex(x => x.ShortName).IsUnique(false);
 
 		builder.Property(x => x.Description)
 			.IsRequired(false)
@@ -29,7 +29,7 @@ class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
 		builder.HasOne(x => x.Owner)
 			.WithMany()
 			.HasForeignKey(x => x.OwnerId)
-			.OnDelete(DeleteBehavior.NoAction); 
+			.OnDelete(DeleteBehavior.Cascade); 
 
 		builder.HasMany(x => x.Schedules)
 			.WithOne(x => x.Institution)

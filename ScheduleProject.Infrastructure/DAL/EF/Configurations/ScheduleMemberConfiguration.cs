@@ -23,10 +23,12 @@ class ScheduleMemberConfiguration : IEntityTypeConfiguration<ScheduleMember>
 
 		builder.HasOne(x => x.Schedule)
 			.WithMany(x => x.Members)
-			.HasForeignKey(x => x.ScheduleId);
+			.HasForeignKey(x => x.ScheduleId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(x => x.User)
 			.WithMany(x => x.ScheduleMemberships)
-			.HasForeignKey(x => x.UserId);
+			.HasForeignKey(x => x.UserId)
+			.OnDelete(DeleteBehavior.Restrict);
 	}
 }

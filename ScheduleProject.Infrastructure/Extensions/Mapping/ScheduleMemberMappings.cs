@@ -13,4 +13,15 @@ public static class ScheduleMemberMappings
 			Role = member.Role.Name
 		};
 	}
+
+	public static ScheduleByUserDto MapToScheduleByUserDto(this ScheduleMember member)
+	{
+		return new ScheduleByUserDto
+		{
+			Id = member.ScheduleId,
+			Name = member.Schedule.Name,
+			Type = member.Schedule.Type.Name,
+			Role = member.Role.Name
+		};
+	}
 }

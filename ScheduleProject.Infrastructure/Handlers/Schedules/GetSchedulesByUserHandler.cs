@@ -7,7 +7,7 @@ using ScheduleProject.Application.Requests.Schedules;
 using ScheduleProject.Core.Entities;
 using ScheduleProject.Infrastructure.Auth.Extensions;
 using ScheduleProject.Infrastructure.DAL.Services;
-using ScheduleProject.Infrastructure.Handlers.Lessons;
+using ScheduleProject.Infrastructure.Extensions.Mapping;
 using System.Security.Claims;
 
 namespace ScheduleProject.Infrastructure.Handlers.Schedules;
@@ -43,13 +43,7 @@ public class GetSchedulesByUserHandler : IRequestHandler<GetSchedulesByUserReque
 				.AsNoTracking()
 				.Include(x => x.Schedule)
 				.Where(x => x.UserId == requestUserId && x.Schedule.IsDeleted == false)
-				.Select(x => new ScheduleByUserDto
-				{
-					Id = x.ScheduleId,
-					Name = x.Schedule.Name,
-					Type = x.Schedule.Type.Name,
-					Role = x.Role.Name
-				})
+				.Select(x => x.MapToScheduleByUserDto())
 				.ToArrayAsync(cancellationToken);
 
 			return schedules;

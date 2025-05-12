@@ -163,8 +163,7 @@ namespace ScheduleProject.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("ShortName")
-                        .IsUnique();
+                    b.HasIndex("ShortName");
 
                     b.ToTable("Institution");
                 });
@@ -405,7 +404,8 @@ namespace ScheduleProject.Infrastructure.Migrations
                 {
                     b.HasOne("ScheduleProject.Core.Entities.AuthToken", "AuthToken")
                         .WithOne("Owner")
-                        .HasForeignKey("ScheduleProject.Core.Entities.AppUser", "AuthTokenId");
+                        .HasForeignKey("ScheduleProject.Core.Entities.AppUser", "AuthTokenId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AuthToken");
                 });
@@ -415,7 +415,7 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.HasOne("ScheduleProject.Core.Entities.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -453,7 +453,7 @@ namespace ScheduleProject.Infrastructure.Migrations
                     b.HasOne("ScheduleProject.Core.Entities.AppUser", "User")
                         .WithMany("ScheduleMemberships")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Schedule");

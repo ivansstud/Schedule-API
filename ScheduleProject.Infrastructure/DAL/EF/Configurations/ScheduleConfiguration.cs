@@ -38,13 +38,11 @@ class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 
 		builder.HasMany(x => x.Members)
 			.WithOne(x => x.Schedule)
-			.HasForeignKey(x => x.ScheduleId)
-			.OnDelete(DeleteBehavior.Cascade);
+			.HasForeignKey(x => x.ScheduleId);
 
 		builder.HasMany(x => x.Lessons)
 			.WithOne(x => x.Schedule)
-			.HasForeignKey(x => x.ScheduleId)
-			.OnDelete(DeleteBehavior.Cascade);
+			.HasForeignKey(x => x.ScheduleId);
 
 		builder.Navigation(p => p.Members).UsePropertyAccessMode(PropertyAccessMode.Field);
 		builder.Navigation(p => p.Lessons).UsePropertyAccessMode(PropertyAccessMode.Field);

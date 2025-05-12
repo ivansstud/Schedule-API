@@ -19,14 +19,14 @@ class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 
 		builder.HasOne(x => x.AuthToken)
 			.WithOne(x => x.Owner)
-			.HasForeignKey<AuthToken>(x => x.OwnerId);
+			.HasForeignKey<AuthToken>(x => x.OwnerId)
+			.OnDelete(DeleteBehavior.Cascade); 
 
 		builder.HasIndex(x => x.Login).IsUnique();
 
 		builder.HasMany(x => x.ScheduleMemberships)
 			.WithOne(x => x.User)
-			.HasForeignKey(x => x.UserId)
-			.OnDelete(DeleteBehavior.Cascade);
+			.HasForeignKey(x => x.UserId);
 
 		builder.Navigation(x => x.ScheduleMemberships).UsePropertyAccessMode(PropertyAccessMode.Field);
 		builder.Navigation(x => x.Roles).UsePropertyAccessMode(PropertyAccessMode.Field);
