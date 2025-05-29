@@ -1,4 +1,5 @@
-﻿using ScheduleProject.Core.Entities.Abstractions;
+﻿using CSharpFunctionalExtensions;
+using ScheduleProject.Core.Entities.Abstractions;
 
 namespace ScheduleProject.Core.Entities;
 
@@ -21,6 +22,8 @@ public class UserRole : EntityBase
 
 	public static UserRole Create(long id, string name, DateTime createDate)
 	{
+		ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
+
 		var result = new UserRole(id, name, createDate);
 		return result;
 	}

@@ -3,6 +3,7 @@ using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities.ValueObjects;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
 
@@ -73,25 +74,17 @@ public class Lesson : EntityBase
 	{
 		name = name.Trim();
 
-		if (ValidateName(name).TryGetError(out var nameError))
+		Result[] validationResults = [
+			ValidateName(name),
+			ValidateAudience(audience),
+			ValidateTeacherName(teacherName),
+			ValidateDescription(description),
+			ValidateTime(startTime, endTime),
+		];
+
+		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
 		{
-			return Result.Failure<Lesson>(nameError);
-		}
-		if (ValidateDescription(description).TryGetError(out var descriptionError))
-		{
-			return Result.Failure<Lesson>(descriptionError);
-		}
-		if (ValidateTeacherName(teacherName).TryGetError(out var teacherNameError))
-		{
-			return Result.Failure<Lesson>(teacherNameError);
-		}
-		if (ValidateAudience(audience).TryGetError(out var audienceError))
-		{
-			return Result.Failure<Lesson>(audienceError);
-		}
-		if (ValidateTime(startTime, endTime).TryGetError(out var timeError))
-		{
-			return Result.Failure<Lesson>(timeError);
+			return Result.Failure<Lesson>(failure.Error);
 		}
 
 		return new Lesson(

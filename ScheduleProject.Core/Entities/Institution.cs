@@ -35,17 +35,15 @@ public class Institution : EntityBase
 
 	public static Result<Institution> Create(string name, string shortName, string? description, long ownerId)
 	{
-		if (ValidateName(name).TryGetError(out var nameError))
+		Result[] validationResults = [
+			ValidateName(name),
+			ValidateShortName(shortName),
+			ValidateDescription(description),
+		];
+
+		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
 		{
-			return Result.Failure<Institution>(nameError);
-		}
-		if (ValidateShortName(shortName).TryGetError(out var shortNameError))
-		{
-			return Result.Failure<Institution>(shortNameError);
-		}
-		if (ValidateDescription(description).TryGetError(out var descriptionError))
-		{
-			return Result.Failure<Institution>(descriptionError);
+			return Result.Failure<Institution>(failure.Error);
 		}
 
 		return new Institution(name, shortName, description, ownerId);

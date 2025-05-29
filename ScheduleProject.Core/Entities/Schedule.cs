@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Abstractions;
-using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities.ValueObjects;
 
 #pragma warning disable CS8618
@@ -41,17 +40,15 @@ public class Schedule : EntityBase
 	{
 		name = name.Trim();
 
-		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		Result[] validationResults = [
+			ValidateName(name),
+			ValidateDescription(description),
+			ValidateScheduleType(type, institutionId)
+		];
+
+		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
 		{
-			return Result.Failure<Schedule>($"Название должно содержать от {MinNameLength} до {MaxNameLength} символов");
-		}
-		if (description?.Length > MaxDescriptionLength)
-		{
-			return Result.Failure<Schedule>($"Описание не может быть длиннее {MaxDescriptionLength} символов");
-		}
-		if (type == ScheduleType.Custom && institutionId != null)
-		{
-			return Result.Failure<Schedule>($"Оригинальное расписание не может быть создано с учреждением");
+			return Result.Failure<Schedule>(failure.Error);
 		}
 
 		var result = new Schedule(name, description, type, weeksType, institutionId);
@@ -77,5 +74,57 @@ public class Schedule : EntityBase
 	public long GetCreatorId()
 	{
 		return _members.First(x => x.Role == ScheduleRole.Creator).Id;
+	}
+
+	public Result SetName(string name)
+	{
+		if (ValidateName(name).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Name = name;
+		return Result.Success();
+	}
+
+	public Result SetDescription(string description)
+	{
+		if (ValidateName(description).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Description = description;
+		return Result.Success();
+	}
+
+	private static Result ValidateName(string name)
+	{
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		{
+			return Result.Failure($"Название учреждения должно содержать от {MinNameLength} до {MaxNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateDescription(string? description)
+	{
+		if (description?.Length > MaxDescriptionLength)
+		{
+			return Result.Failure<Schedule>($"Описание не может быть длиннее {MaxDescriptionLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateScheduleType(ScheduleType? type, long? institutionId)
+	{
+		if (type == ScheduleType.Custom && institutionId != null)
+		{
+			return Result.Failure<Schedule>($"Оригинальное расписание не может быть создано с учреждением");
+		}
+
+		return Result.Success();
 	}
 }
