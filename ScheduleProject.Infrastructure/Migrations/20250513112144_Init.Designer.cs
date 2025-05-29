@@ -12,8 +12,8 @@ using ScheduleProject.Infrastructure.DAL.EF;
 namespace ScheduleProject.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250508035226_ChangeMinNameOfInstitusion")]
-    partial class ChangeMinNameOfInstitusion
+    [Migration("20250513112144_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -375,13 +375,6 @@ namespace ScheduleProject.Infrastructure.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Name = "InstitusionRemover"
-                        },
-                        new
-                        {
-                            Id = 4L,
                             CreatedAt = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Administrator"

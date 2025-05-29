@@ -374,13 +374,6 @@ namespace ScheduleProject.Infrastructure.Migrations
                             Id = 3L,
                             CreatedAt = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            Name = "InstitusionRemover"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedAt = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Administrator"
                         });
                 });

@@ -2,6 +2,10 @@
 using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
 using ScheduleProject.Core.Entities.ValueObjects;
+using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
+
+
 
 #pragma warning disable CS8618 
 
@@ -69,25 +73,25 @@ public class Lesson : EntityBase
 	{
 		name = name.Trim();
 
-		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		if (ValidateName(name).TryGetError(out var nameError))
 		{
-			return Result.Failure<Lesson>($"Название занятия должно содержать от {MinNameLength} до {MaxNameLength} символов");
+			return Result.Failure<Lesson>(nameError);
 		}
-		if (description?.Length > MaxDescriptionLength)
+		if (ValidateDescription(description).TryGetError(out var descriptionError))
 		{
-			return Result.Failure<Lesson>($"Описание занятия не может быть длиннее {MaxDescriptionLength} символов");
+			return Result.Failure<Lesson>(descriptionError);
 		}
-		if (teacherName?.Length > MaxTeacherNameLength)
+		if (ValidateTeacherName(teacherName).TryGetError(out var teacherNameError))
 		{
-			return Result.Failure<Lesson>($"Имя преподавателя не может быть длиннее {MaxTeacherNameLength} символов");
+			return Result.Failure<Lesson>(teacherNameError);
 		}
-		if (audience?.Length > MaxAudienceLength)
+		if (ValidateAudience(audience).TryGetError(out var audienceError))
 		{
-			return Result.Failure<Lesson>($"Название аудитории не может быть длиннее {MaxAudienceLength} символов");
+			return Result.Failure<Lesson>(audienceError);
 		}
-		if (startTime > endTime)
+		if (ValidateTime(startTime, endTime).TryGetError(out var timeError))
 		{
-			return Result.Failure<Lesson>($"Время начала занятия не может быть позже времени окончания");
+			return Result.Failure<Lesson>(timeError);
 		}
 
 		return new Lesson(
@@ -102,5 +106,116 @@ public class Lesson : EntityBase
 			day,
 			scheduleId
 		); 
+	}
+
+	public Result SetName(string name)
+	{
+		if (ValidateName(name).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Name = name;
+		return Result.Success();
+	}
+
+	public Result SetDescription(string? description)
+	{
+		if (ValidateDescription(description).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Description = description;
+		return Result.Success();
+	}
+
+	public Result SetAudience(string? audience)
+	{
+		if (ValidateAudience(audience).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Audience = audience;
+		return Result.Success();
+	}
+
+	public Result SetTeacherName(string? teacherName)
+	{
+		if (ValidateTeacherName(teacherName).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		TeacherName = teacherName;
+		return Result.Success();
+	}
+
+	public Result SetTime(TimeOnly startTime, TimeOnly endTime)
+	{
+		if (ValidateTime(startTime, endTime).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		EndTime = endTime;
+		StartTime = startTime;
+		return Result.Success();
+	}
+
+	public void SetType(LessonType type)
+	{
+		LessonType = type;
+	}
+
+	private static Result ValidateTime(TimeOnly startTime, TimeOnly endTime)
+	{
+		if (startTime > endTime)
+		{
+			return Result.Failure<Lesson>($"Время начала занятия не может быть позже времени окончания");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateAudience(string? audience)
+	{
+		if (audience?.Length > MaxAudienceLength)
+		{
+			return Result.Failure<Lesson>($"Название аудитории не может быть длиннее {MaxAudienceLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateName(string name)
+	{
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		{
+			return Result.Failure<Lesson>($"Название занятия должно содержать от {MinNameLength} до {MaxNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateDescription(string? description)
+	{
+		if (description?.Length > MaxDescriptionLength)
+		{
+			return Result.Failure<Lesson>($"Описание занятия не может быть длиннее {MaxDescriptionLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateTeacherName(string? teacherName)
+	{
+		if (teacherName?.Length > MaxTeacherNameLength)
+		{
+			return Result.Failure<Lesson>($"Имя преподавателя не может быть длиннее {MaxTeacherNameLength} символов");
+		}
+
+		return Result.Success();
 	}
 }

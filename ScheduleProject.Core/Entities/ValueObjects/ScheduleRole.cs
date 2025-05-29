@@ -12,7 +12,7 @@ public class ScheduleRole : ValueObject
 	public static readonly ScheduleRole Creator = new("Создатель", 2);
 	public static readonly ScheduleRole Moderator = new("Модератор", 3);
 
-	private static readonly IEnumerable<ScheduleRole> _all = [Member, Creator, Moderator];
+	private static readonly IEnumerable<ScheduleRole> s_all = [Member, Creator, Moderator];
 
 	private ScheduleRole() { } // Для EF Core
 
@@ -27,12 +27,12 @@ public class ScheduleRole : ValueObject
 
 	public static ScheduleRole? FromName(string? name)
 	{
-		return _all.FirstOrDefault(x => x.Name == name);
+		return s_all.FirstOrDefault(x => x.Name == name);
 	}
 
 	public static ScheduleRole? FromValue(int? value)
 	{
-		return _all.FirstOrDefault(x => x.Value == value);
+		return s_all.FirstOrDefault(x => x.Value == value);
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()

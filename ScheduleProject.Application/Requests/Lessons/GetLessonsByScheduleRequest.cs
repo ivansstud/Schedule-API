@@ -11,5 +11,5 @@ public class GetLessonsByScheduleRequest : IRequest<Result<LessonByScheduleDto[]
         ScheduleId = scheduleId;
     }
 
-    public long ScheduleId { get; }
+    public long ScheduleId { get; set; }
 }

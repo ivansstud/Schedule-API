@@ -67,6 +67,11 @@ public class CreateLessonHandler : IRequestHandler<CreateLessonCommand, Result>
             
             return Result.Success();
         }
+        catch (OperationCanceledException)
+        {
+			_logger.LogInformation("Запрос {request} был отменён", nameof(CreateLessonCommand));
+			return Result.Failure("Запрос отменён");
+		}
         catch (Exception ex)
         {
             _logger.LogError("{Exception}", ex.Message + ex.InnerException?.Message);

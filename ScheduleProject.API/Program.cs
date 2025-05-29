@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using ScheduleProject.API.Endpoints;
 using ScheduleProject.API.Enums;
@@ -11,6 +13,12 @@ using ScheduleProject.Infrastructure.Handlers.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Schedule API", Version = "v1" });
+});
+
 
 builder.Services.AddOpenApi();
 
@@ -33,16 +41,9 @@ builder.Services.AddAuthorizationBuilder()
 	})
 	.AddPolicy(AppPolicies.InstitusionsUsers, policy =>
 	{
-		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.InstitusionRemover, AppRoles.Administrator);
-	})
-	.AddPolicy(AppPolicies.InstitusionAdder, policy =>
-	{
 		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionAdder, AppRoles.Administrator);
-	})
-	.AddPolicy(AppPolicies.InstitusionRemover, policy =>
-	{
-		policy.RequireClaim(CustomClaimTypes.Role, AppRoles.InstitusionRemover, AppRoles.Administrator);
 	});
+
 
 builder.Services.AddMediatR(c =>
 {
@@ -54,11 +55,24 @@ builder.Services.AddTransient(provider =>
 	provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User
 	?? throw new InvalidOperationException("User not available"));
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAll", policy =>
+	{
+		policy
+			.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader();
+	});
+});
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+	app.UseSwagger();
+	app.UseSwaggerUI();
+
 	app.MapOpenApi();
 	app.MapScalarApiReference();
 }
@@ -70,9 +84,11 @@ app.UseCookiePolicy(new CookiePolicyOptions
 	Secure = CookieSecurePolicy.Always
 });
 
+app.MapApplicationEndpoints();
+
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapApplicationEndpoints();
 
 app.Run();

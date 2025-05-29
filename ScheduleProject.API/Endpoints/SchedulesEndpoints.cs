@@ -46,9 +46,9 @@ public static class SchedulesEndpoints
 		return Results.NoContent();
 	}
 
-	private static async Task<IResult> GetByUserHandler(long userId, IMediator mediator, CancellationToken cancellationToken)
+	private static async Task<IResult> GetByUserHandler([AsParameters] GetSchedulesByUserRequest request, IMediator mediator, CancellationToken cancellationToken)
 	{
-		var result = await mediator.Send(new GetSchedulesByUserRequest(userId), cancellationToken);
+		var result = await mediator.Send(request, cancellationToken);
 
 		if (result.IsFailure)
 		{

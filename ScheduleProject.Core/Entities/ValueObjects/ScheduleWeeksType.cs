@@ -11,7 +11,7 @@ public class ScheduleWeeksType : ValueObject
 	public static readonly ScheduleWeeksType Cyclic = new("Цикличное", 1);
 	public static readonly ScheduleWeeksType Permanent = new("Постоянное", 2);
 
-	private static readonly IEnumerable<ScheduleWeeksType> _all = [Cyclic, Permanent];
+	private static readonly IEnumerable<ScheduleWeeksType> s_all = [Cyclic, Permanent];
 
 	private ScheduleWeeksType() { } // Для EF Core
 
@@ -26,12 +26,12 @@ public class ScheduleWeeksType : ValueObject
 
 	public static ScheduleWeeksType? FromName(string? name)
 	{
-		return _all.FirstOrDefault(x => x.Name == name);
+		return s_all.FirstOrDefault(x => x.Name == name);
 	}
 
 	public static ScheduleWeeksType? FromValue(int? value)
 	{
-		return _all.FirstOrDefault(x => x.Value == value);
+		return s_all.FirstOrDefault(x => x.Value == value);
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()

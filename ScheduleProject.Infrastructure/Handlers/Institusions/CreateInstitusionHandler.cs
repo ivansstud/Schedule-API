@@ -7,6 +7,7 @@ using ScheduleProject.Infrastructure.Auth.Extensions;
 using ScheduleProject.Infrastructure.DAL.Services;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using ScheduleProject.Core.Entities.Enums;
 
 namespace ScheduleProject.Infrastructure.Handlers.Institusions;
 
@@ -28,17 +29,6 @@ public class CreateInstitusionHandler : IRequestHandler<CreateInstitusionCammand
 		try
 		{
 			var userId = _user.GetId();
-
-			var isUserExists = await _unitOfWork.Db
-				.Set<AppUser>()
-				.Where(x => x.Id == userId && x.IsDeleted == false)
-				.AnyAsync(cancellationToken);
-
-			if (isUserExists == false)
-			{
-				//TODO: Добавить крит лог
-				return Result.Failure("Упс! Не удалось добавить учреждение. Перезайдите в профиль.");
-			}
 
 			var newInstitusionResult = Institution.Create(request.Name, request.ShortName, request.Description, userId);
 			

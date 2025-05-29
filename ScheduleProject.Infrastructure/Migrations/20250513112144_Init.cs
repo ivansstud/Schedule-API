@@ -224,8 +224,7 @@ namespace ScheduleProject.Infrastructure.Migrations
                 {
                     { 1L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "DomainUser" },
                     { 2L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "InstitusionAdder" },
-                    { 3L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "InstitusionRemover" },
-                    { 4L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Administrator" }
+                    { 3L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Administrator" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -255,8 +254,7 @@ namespace ScheduleProject.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Institution_ShortName",
                 table: "Institution",
-                column: "ShortName",
-                unique: true);
+                column: "ShortName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lesson_ScheduleId",

@@ -13,7 +13,7 @@ public class ScheduleType : ValueObject
 	public static readonly ScheduleType College = new("Колледж", 3);
 	public static readonly ScheduleType School = new("Школа", 4);
 
-	private static readonly IEnumerable<ScheduleType> _all = [Custom, University, College, School];
+	private static readonly IEnumerable<ScheduleType> s_all = [Custom, University, College, School];
 
 	private ScheduleType() { } // Для EF Core
 
@@ -28,12 +28,12 @@ public class ScheduleType : ValueObject
 
 	public static ScheduleType? FromName(string? name)
 	{
-		return _all.FirstOrDefault(x => x.Name == name);
+		return s_all.FirstOrDefault(x => x.Name == name);
 	}
 
 	public static ScheduleType? FromValue(int? value)
 	{
-		return _all.FirstOrDefault(x => x.Value == value);
+		return s_all.FirstOrDefault(x => x.Value == value);
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()

@@ -16,7 +16,7 @@ public class Day : ValueObject
 	public static readonly Day Saturday = new ("Сб", 6);
 	public static readonly Day Sunday = new ("Вс", 7);
 
-	private static readonly IEnumerable<Day> _all = [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday];
+	private static readonly IEnumerable<Day> s_all = [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday];
 
 	private Day() { } // Для EF Core
 
@@ -31,12 +31,12 @@ public class Day : ValueObject
 
 	public static Day? FromName(string? name)
 	{
-		return _all.FirstOrDefault(x => x.Name == name);
+		return s_all.FirstOrDefault(x => x.Name == name);
 	}
 
 	public static Day? FromValue(int? value)
 	{
-		return _all.FirstOrDefault(x => x.Value == value);
+		return s_all.FirstOrDefault(x => x.Value == value);
 	}
 
 	protected override IEnumerable<object> GetEqualityComponents()

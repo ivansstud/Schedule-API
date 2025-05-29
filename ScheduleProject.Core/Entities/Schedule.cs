@@ -73,4 +73,9 @@ public class Schedule : EntityBase
 			_members.Add(member);
 		}
 	}
+
+	public long GetCreatorId()
+	{
+		return _members.First(x => x.Role == ScheduleRole.Creator).Id;
+	}
 }

@@ -35,17 +35,17 @@ public class Institution : EntityBase
 
 	public static Result<Institution> Create(string name, string shortName, string? description, long ownerId)
 	{
-		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		if (ValidateName(name).TryGetError(out var nameError))
 		{
-			return Result.Failure<Institution>($"Название учреждения должно содержать от {MinNameLength} до {MaxNameLength} символов");
+			return Result.Failure<Institution>(nameError);
 		}
-		if (shortName.Length > MaxShortNameLength || shortName.Length < MinShortNameLength)
+		if (ValidateShortName(shortName).TryGetError(out var shortNameError))
 		{
-			return Result.Failure<Institution>($"Короткое название учреждения должно содержать от {MinShortNameLength} до {MaxShortNameLength} символов");
+			return Result.Failure<Institution>(shortNameError);
 		}
-		if (description?.Length > MaxDescriptionLength)
+		if (ValidateDescription(description).TryGetError(out var descriptionError))
 		{
-			return Result.Failure<Institution>($"Описание учреждения не может быть длиннее {MaxDescriptionLength} символов");
+			return Result.Failure<Institution>(descriptionError);
 		}
 
 		return new Institution(name, shortName, description, ownerId);
@@ -57,5 +57,74 @@ public class Institution : EntityBase
 		{
 			_schedules.Add(schedule);
 		}
+	}
+
+	public Result SetName(string name)
+	{
+		name = name.Trim();
+
+		if (ValidateName(name).TryGetError(out string? error))
+		{
+			return Result.Failure(error);
+		}
+
+		Name = name;
+		return Result.Success();
+	}
+
+	public Result SetShortName(string shortName)
+	{
+		shortName = shortName.Trim();
+
+		if (ValidateShortName(shortName).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		ShortName = shortName;
+		return Result.Success();
+	}
+
+	public Result SetDescription(string? description)
+	{
+		description = description?.Trim();
+
+		if (ValidateDescription(description).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Description = description;
+		return Result.Success();
+	}
+
+	private static Result ValidateName(string name)
+	{
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
+		{
+			return Result.Failure($"Название учреждения должно содержать от {MinNameLength} до {MaxNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateShortName(string shortName)
+	{
+		if (shortName.Length > MaxShortNameLength || shortName.Length < MinShortNameLength)
+		{
+			return Result.Failure($"Аббривиатура учреждения должна содержать от {MinShortNameLength} до {MaxShortNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateDescription(string? description)
+	{
+		if (description?.Length > MaxDescriptionLength)
+		{
+			return Result.Failure<Institution>($"Описание учреждения не может быть длиннее {MaxDescriptionLength} символов");
+		}
+
+		return Result.Success();
 	}
 }
