@@ -364,3 +364,6 @@ FodyWeavers.xsd
 /ScheduleProject.API/appsettings.json
 /ScheduleProject.API/appsettings.Development.json
 /.editorconfig
+/.idea/.idea.ScheduleProject/.idea
+/ScheduleProject.Infrastructure/GlobalSuppressions.cs
+/ScheduleProject.Application/GlobalSuppressions.cs

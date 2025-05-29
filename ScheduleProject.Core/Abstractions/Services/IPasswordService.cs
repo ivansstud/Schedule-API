@@ -1,6 +1,4 @@
-﻿using ScheduleProject.Core.Entities;
-
-namespace ScheduleProject.Core.Abstractions.Services;
+﻿namespace ScheduleProject.Core.Abstractions.Services;
 
 public interface IPasswordService
 {

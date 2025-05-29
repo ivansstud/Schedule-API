@@ -1,6 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
+using ScheduleProject.Core.Entities.ValueObjects;
+
+#pragma warning disable CS8618
 
 namespace ScheduleProject.Core.Entities;
 
@@ -23,9 +26,8 @@ public class ScheduleMember : EntityBase
 
 	public ScheduleRole Role { get; private set; }
 
-	public static Result<ScheduleMember> Create(long scheduleId, long userId, ScheduleRole role)
+	public static ScheduleMember Create(long scheduleId, long userId, ScheduleRole role)
 	{
-		var result = new ScheduleMember(scheduleId, userId, role);
-		return result;
+		return new ScheduleMember(scheduleId, userId, role);
 	}
 }

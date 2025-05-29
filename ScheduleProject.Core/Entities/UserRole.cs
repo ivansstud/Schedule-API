@@ -8,17 +8,20 @@ public class UserRole : EntityBase
 
 	private readonly List<AppUser> _users = [];
 
-	private UserRole(long id, string name) : base(id)
+	private UserRole() { }
+
+	private UserRole(long id, string name, DateTime createDate) : base(id)
 	{
 		Name = name;
+		CreatedAt = createDate;
 	}
 
 	public string Name { get; private set; } = null!;
 	public IReadOnlyList<AppUser> Users => _users;
 
-	public static UserRole Create(long id, string name)
+	public static UserRole Create(long id, string name, DateTime createDate)
 	{
-		var result = new UserRole(id, name);
+		var result = new UserRole(id, name, createDate);
 		return result;
 	}
 }

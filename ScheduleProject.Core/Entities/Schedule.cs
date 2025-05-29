@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ScheduleProject.Core.Entities.Abstractions;
 using ScheduleProject.Core.Entities.Enums;
+using ScheduleProject.Core.Entities.ValueObjects;
 
 #pragma warning disable CS8618
 
@@ -10,6 +11,8 @@ public class Schedule : EntityBase
 {
 	public const int MaxNameLength = 32;
 	public const int MaxDescriptionLength = 128;
+
+	public const int MinNameLength = 1;
 
 	private readonly List<ScheduleMember> _members = [];
 	private readonly List<Lesson> _lessons = [];
@@ -29,7 +32,6 @@ public class Schedule : EntityBase
 	public string? Description { get; private set; }
 	public ScheduleType Type { get; private set; }
 	public ScheduleWeeksType WeeksType { get; private set; }
-
 	public long? InstitutionId { get; private set; }
 	public Institution? Institution { get; private set; }
 	public IReadOnlyList<ScheduleMember> Members => _members;
@@ -37,9 +39,11 @@ public class Schedule : EntityBase
 
 	public static Result<Schedule> Create(string name, string? description, ScheduleType type, ScheduleWeeksType weeksType, long? institutionId)
 	{
-		if (name.Length > MaxNameLength)
+		name = name.Trim();
+
+		if (name.Length > MaxNameLength || name.Length < MinNameLength)
 		{
-			return Result.Failure<Schedule>($"Название не может быть длиннее {MaxNameLength} символов");
+			return Result.Failure<Schedule>($"Название должно содержать от {MinNameLength} до {MaxNameLength} символов");
 		}
 		if (description?.Length > MaxDescriptionLength)
 		{
@@ -68,5 +72,10 @@ public class Schedule : EntityBase
 		{
 			_members.Add(member);
 		}
+	}
+
+	public long GetCreatorId()
+	{
+		return _members.First(x => x.Role == ScheduleRole.Creator).Id;
 	}
 }
