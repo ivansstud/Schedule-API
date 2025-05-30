@@ -28,6 +28,9 @@ public class ScheduleMember : EntityBase
 
 	public static ScheduleMember Create(long scheduleId, long userId, ScheduleRole role)
 	{
+		ArgumentOutOfRangeException.ThrowIfNegativeOrZero(scheduleId);
+		ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
+
 		return new ScheduleMember(scheduleId, userId, role);
 	}
 }

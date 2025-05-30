@@ -42,17 +42,15 @@ public class AppUser : EntityBase
 
 	public static Result<AppUser> Create(string login, string passwordHash, string firstName, string lastName)
 	{
-		if (firstName.Length > MaxFirstNameLength || firstName.Length < MinFirstNameLength)
+		Result[] validationResults = [
+			ValidateFirstName(firstName),
+			ValidateLastName(lastName),
+			ValidateLogin(login),
+		];
+
+		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
 		{
-			return Result.Failure<AppUser>($"Имя должно содержать от {MinFirstNameLength} до {MaxFirstNameLength} символов");
-		}
-		if (lastName.Length > MaxLastNameLength || lastName.Length < MinLastNameLength)
-		{
-			return Result.Failure<AppUser>($"Фамилия должна содержать от {MinLastNameLength} до {MaxLastNameLength} символов");
-		}
-		if (login.Length > MaxLoginLength || login.Length < MinLoginLength)
-		{
-			return Result.Failure<AppUser>($"Логин должен содержать от {MinLoginLength} до {MaxLoginLength} символов");
+			return Result.Failure<AppUser>(failure.Error);
 		}
 		
 		var result = new AppUser(login, passwordHash, firstName, lastName);
@@ -62,6 +60,39 @@ public class AppUser : EntityBase
 	public void SetAuthToken(AuthToken token)
 	{
 		AuthToken = token;
+	}
+
+	public Result SetFirstName(string firstName)
+	{
+		if (ValidateFirstName(firstName).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		FirstName = firstName;
+		return Result.Success();
+	}
+
+	public Result SetLastName(string lastName)
+	{
+		if (ValidateLastName(lastName).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		LastName = lastName;
+		return Result.Success();
+	}
+
+	public Result SetLogin(string login)
+	{
+		if (ValidateLogin(login).TryGetError(out var error))
+		{
+			return Result.Failure(error);
+		}
+
+		Login = login;
+		return Result.Success();
 	}
 
 	public void AddRole(UserRole role)
@@ -94,5 +125,35 @@ public class AppUser : EntityBase
 		{
 			_scheduleMemberships.Remove(member);
 		}
+	}
+
+	private static Result ValidateFirstName(string firstName)
+	{
+		if (firstName.Length > MaxFirstNameLength || firstName.Length < MinFirstNameLength)
+		{
+			return Result.Failure($"Имя должно содержать от {MinFirstNameLength} до {MaxFirstNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateLastName(string lastName)
+	{
+		if (lastName.Length > MaxLastNameLength || lastName.Length < MinLastNameLength)
+		{
+			return Result.Failure($"Фамилия должна содержать от {MinLastNameLength} до {MaxLastNameLength} символов");
+		}
+
+		return Result.Success();
+	}
+
+	private static Result ValidateLogin(string login)
+	{
+		if (login.Length > MaxLoginLength || login.Length < MinLoginLength)
+		{
+			return Result.Failure($"Логин должен содержать от {MinLoginLength} до {MaxLoginLength} символов");
+		}
+
+		return Result.Success();
 	}
 }
