@@ -53,8 +53,7 @@ public class AppUser : EntityBase
 			return Result.Failure<AppUser>(failure.Error);
 		}
 		
-		var result = new AppUser(login, passwordHash, firstName, lastName);
-		return result;
+		return new AppUser(login, passwordHash, firstName, lastName);
 	}
 
 	public void SetAuthToken(AuthToken token)
