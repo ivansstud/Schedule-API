@@ -49,11 +49,31 @@ public class Institution : EntityBase
 		return new Institution(name, shortName, description, ownerId);
 	}
 
+	public void SetOwner(AppUser owner)
+	{
+		ArgumentNullException.ThrowIfNull(owner);
+
+		Owner = owner;
+		OwnerId = owner.Id;
+	}
+
 	public void AddSchedule(Schedule schedule)
 	{
+		ArgumentNullException.ThrowIfNull(schedule);
+
 		if (!_schedules.Any(x => x.Id == schedule.Id))
 		{
 			_schedules.Add(schedule);
+		}
+	}
+
+	public void RemoveSchedule(Schedule schedule)
+	{
+		ArgumentNullException.ThrowIfNull(schedule);
+
+		if (_schedules.Any(x => x.Id == schedule.Id))
+		{
+			_schedules.Remove(schedule);
 		}
 	}
 

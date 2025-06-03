@@ -31,4 +31,9 @@ public static class ClaimsPrincipalExtesions
 	{
 		return principal.GetRoles().Any(x => x == AppRoles.Administrator);
 	}
+
+	public static bool IsInstitusionUser(this ClaimsPrincipal principal)
+	{
+		return principal.GetRoles().Any(x => AppRoles.InstitusionUsers.Contains(x));
+	}
 }

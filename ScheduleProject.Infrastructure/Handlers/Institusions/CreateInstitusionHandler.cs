@@ -37,10 +37,24 @@ public class CreateInstitusionHandler : IRequestHandler<CreateInstitusionCammand
 				return Result.Failure(newInstitusionResult.Error);
 			}
 
+			if (!_user.IsInstitusionUser() && !_user.IsAdmin())
+			{
+				return Result.Failure("У вас нет прав для создания нового учреждения.");
+			}
+
 			await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-			await _unitOfWork.Db.AddAsync(newInstitusion,cancellationToken);
-			
+			var user = await _unitOfWork.Db
+				.Set<AppUser>()
+				.FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted, cancellationToken);
+
+			if (user is null)
+			{
+				return Result.Failure("Ошибка авторизации");
+			}
+
+			newInstitusion.SetOwner(user);
+
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitAsync(cancellationToken);
 

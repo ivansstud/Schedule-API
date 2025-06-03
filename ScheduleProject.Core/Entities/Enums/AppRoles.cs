@@ -8,6 +8,8 @@ public static class AppRoles
 	public const string InstitusionAdder = nameof(InstitusionAdder);
 	public const string Administrator = nameof(Administrator);
 
+	public static IEnumerable<string> InstitusionUsers => [DomainUser,	InstitusionAdder];
+
 	public static IReadOnlyList<string> GetRoles()
 	{
 		return typeof(AppRoles)
