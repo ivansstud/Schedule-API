@@ -24,6 +24,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
       
+    - name: Run Tests
+      run: dotnet test ScheduleProject.Core.Tests/ScheduleProject.Core.Tests.csproj --no-build --configuration Release
+      
     - name: Check project structure
       run: ls -R
       
