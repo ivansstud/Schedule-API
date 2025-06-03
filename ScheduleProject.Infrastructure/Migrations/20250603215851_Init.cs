@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,16 +19,16 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false),
-                    AccessToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccessTokenExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RefreshTokenExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    AccessToken = table.Column<string>(type: "text", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: false),
+                    AccessTokenExpiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RefreshTokenExpiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,11 +40,11 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,16 +56,16 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: false),
-                    Login = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: false),
-                    HashedPassword = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "character varying(24)", maxLength: 24, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(24)", maxLength: 24, nullable: false),
+                    Login = table.Column<string>(type: "character varying(24)", maxLength: 24, nullable: false),
+                    HashedPassword = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     AuthTokenId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,15 +83,15 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ShortName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    ShortName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -132,16 +133,16 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    WeeksType = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    WeeksType = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     InstitutionId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,21 +160,21 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    TeacherName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
-                    Audience = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
-                    LessonType = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    StartTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    ScheduleWeeksType = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Day = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    Description = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    TeacherName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
+                    Audience = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: true),
+                    LessonType = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    ScheduleWeeksType = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    Day = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     ScheduleId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -191,14 +192,14 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ScheduleId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Role = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -222,17 +223,16 @@ namespace ScheduleProject.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "DeletionDate", "IsDeleted", "ModifiedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "DomainUser" },
-                    { 2L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "InstitusionAdder" },
-                    { 3L, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Administrator" }
+                    { 1L, new DateTime(2025, 4, 30, 21, 0, 0, 0, DateTimeKind.Utc), null, false, null, "DomainUser" },
+                    { 2L, new DateTime(2025, 4, 30, 21, 0, 0, 0, DateTimeKind.Utc), null, false, null, "InstitusionAdder" },
+                    { 3L, new DateTime(2025, 4, 30, 21, 0, 0, 0, DateTimeKind.Utc), null, false, null, "Administrator" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUser_AuthTokenId",
                 table: "AppUser",
                 column: "AuthTokenId",
-                unique: true,
-                filter: "[AuthTokenId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUser_Login",

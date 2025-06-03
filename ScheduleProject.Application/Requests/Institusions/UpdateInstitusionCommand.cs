@@ -8,5 +8,5 @@ public class UpdateInstitusionCommand : IRequest<Result>
 	public long Id { get; set; }
 	public required string Name { get; set; }
 	public required string ShortName { get; set; }
-	public string? Description { get; private set; }
+	public string? Description { get; set; }
 }

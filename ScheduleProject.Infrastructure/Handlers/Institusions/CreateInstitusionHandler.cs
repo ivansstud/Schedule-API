@@ -53,6 +53,7 @@ public class CreateInstitusionHandler : IRequestHandler<CreateInstitusionCammand
 				return Result.Failure("Ошибка авторизации");
 			}
 
+			_unitOfWork.Db.Add(newInstitusion);
 			newInstitusion.SetOwner(user);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);

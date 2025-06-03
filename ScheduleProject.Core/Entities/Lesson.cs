@@ -82,9 +82,9 @@ public class Lesson : EntityBase
 			ValidateTime(startTime, endTime),
 		];
 
-		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
+		if (validationResults.Any(x => x.IsFailure))
 		{
-			return Result.Failure<Lesson>(failure.Error);
+			return Result.Failure<Lesson>(validationResults.First(x => x.IsFailure).Error);
 		}
 
 		return new Lesson(

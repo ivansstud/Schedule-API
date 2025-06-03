@@ -48,9 +48,9 @@ public class AppUser : EntityBase
 			ValidateLogin(login),
 		];
 
-		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
+		if (validationResults.Any(x => x.IsFailure))
 		{
-			return Result.Failure<AppUser>(failure.Error);
+			return Result.Failure<AppUser>(validationResults.First(x => x.IsFailure).Error);
 		}
 		
 		return new AppUser(login, passwordHash, firstName, lastName);

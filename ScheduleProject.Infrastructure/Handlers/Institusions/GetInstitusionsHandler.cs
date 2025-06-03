@@ -32,10 +32,12 @@ public class GetInstitusionsHandler : IRequestHandler<GetInstituisonsRequest, Re
 				return Result.Failure<InstitusionShortInfoDto[]>($"Для получения учреждений необходимо ввести минимум {Institution.MinShortNameLength} символов.");
 			}
 
+			// Replace EF.Functions.ILike with EF.Functions.Like
 			var institusions = await _unitOfWork.Db
 				.Set<Institution>()
-				.Where(x => x.IsDeleted == false
-					&& EF.Functions.Like(x.Name, $"%{substring}%") || EF.Functions.Like(x.ShortName, $"%{substring}%"))
+				.Where(x => !x.IsDeleted &&
+					(EF.Functions.ILike(x.Name, $"%{substring}%") ||
+					 EF.Functions.ILike(x.ShortName, $"%{substring}%")))
 				.Select(x => x.MapToShortInfo())
 				.Take(request.Take)
 				.Skip(request.Skip)

@@ -27,7 +27,7 @@ class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 	private static void AddRoles(EntityTypeBuilder<UserRole> builder)
 	{
 		var appRoles = AppRoles.GetRoles();
-		var date = new DateTime(2025, 5, 1);
+		var date = new DateTime(2025, 5, 1).ToUniversalTime();
 
 		for (int i = 0; i < appRoles.Count; i++)
 		{

@@ -46,9 +46,9 @@ public class Schedule : EntityBase
 			ValidateScheduleType(type, institutionId)
 		];
 
-		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
+		if (validationResults.Any(x => x.IsFailure))
 		{
-			return Result.Failure<Schedule>(failure.Error);
+			return Result.Failure<Schedule>(validationResults.First(x => x.IsFailure).Error);
 		}
 
 		var result = new Schedule(name, description, type, weeksType, institutionId);

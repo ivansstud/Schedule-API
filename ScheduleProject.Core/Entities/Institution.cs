@@ -41,9 +41,9 @@ public class Institution : EntityBase
 			ValidateDescription(description),
 		];
 
-		if (validationResults.FirstOrDefault(x => x.IsFailure) is { } failure)
+		if (validationResults.Any(x => x.IsFailure))
 		{
-			return Result.Failure<Institution>(failure.Error);
+			return Result.Failure<Institution>(validationResults.First(x => x.IsFailure).Error);
 		}
 
 		return new Institution(name, shortName, description, ownerId);

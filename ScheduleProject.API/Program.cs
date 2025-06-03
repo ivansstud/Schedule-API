@@ -24,8 +24,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
-//builder.Services.AddPostgreSqlDbContext(configuration.GetConnectionString("PostgreSQL")!);
-builder.Services.AddMssqlDbContext(configuration.GetConnectionString("MSSQL")!);
+builder.Services.AddPostgreSqlDbContext(configuration.GetConnectionString("PostgreSQL")!);
+//builder.Services.AddMssqlDbContext(configuration.GetConnectionString("MSSQL")!);
 
 builder.Services.AddUnitOfWork();
 
