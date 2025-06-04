@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +56,13 @@ public static class DependencyInjection
 	public static void AddUnitOfWork(this IServiceCollection services)
 	{
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
-		
+
+	}
+
+	public static void ApplyMigrations(this IApplicationBuilder applicationBuilder)
+	{
+		using var scope = applicationBuilder.ApplicationServices.CreateScope();
+		using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+		dbContext.Database.Migrate();
 	}
 }

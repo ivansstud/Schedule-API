@@ -5,8 +5,13 @@ using ScheduleProject.Core.Entities.Abstractions;
 
 namespace ScheduleProject.Infrastructure.DAL.EF;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext : DbContext
 {
+	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+	{
+		Database.EnsureCreated();
+	}
+
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

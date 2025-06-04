@@ -12,7 +12,7 @@ using ScheduleProject.Infrastructure.DAL.EF;
 namespace ScheduleProject.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250603215851_Init")]
+    [Migration("20250604152319_Init")]
     partial class Init
     {
         /// <inheritdoc />

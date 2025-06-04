@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  schedules.api:
+    image: ${DOCKER_REGISTRY-}schedulesapi
+    container_name: schedules.api
+    build:
+      context: .
+      dockerfile: ScheduleProject.API/Dockerfile
+    ports:
+      - "8080"
+    depends_on:
+      - schedules.db
+
+  schedules.db:
+    image: postgres:latest
+    container_name: schedules.db
+    environment:
+      - POSTGRES_DB=schedules
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/products-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

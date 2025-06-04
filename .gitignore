@@ -367,3 +367,5 @@ FodyWeavers.xsd
 /.idea/.idea.ScheduleProject/.idea
 /ScheduleProject.Infrastructure/GlobalSuppressions.cs
 /ScheduleProject.Application/GlobalSuppressions.cs
+/.containers/schedules-db
+/.containers/products-db
